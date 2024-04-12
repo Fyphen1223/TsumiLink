@@ -36,5 +36,15 @@ player.seek();
 
 player.leave();
 
+player.on('paused', () => {
+	
+});
+player.on('resumed', () => {
+	
+});
+player.on('error', () => {
+
+});
+
 client.on('raw', (data) => handleRaw(data));
 ```
