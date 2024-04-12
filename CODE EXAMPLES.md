@@ -29,5 +29,12 @@ player.join({
 
 player.play(track.encoded);
 
+player.pause();
+player.resume();
+
+player.seek();
+
+player.leave();
+
 client.on('raw', (data) => handleRaw(data));
 ```
