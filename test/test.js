@@ -20,10 +20,6 @@ Tsumi.addNode({
 	port: 2333,
 });
 
-Tsumi.on('nodeOpen', (node) => {
-	console.log(`Node ${node.serverName} is now open`);
-});
-
 const client = new discord.Client({
 	intents: [
 		discord.GatewayIntentBits.DirectMessageReactions,
@@ -43,6 +39,9 @@ const client = new discord.Client({
 		discord.GatewayIntentBits.GuildWebhooks,
 		discord.GatewayIntentBits.Guilds,
 		discord.GatewayIntentBits.MessageContent,
+		discord.IntentsBitField.Flags.Guilds,
+		discord.IntentsBitField.Flags.MessageContent,
+		discord.IntentsBitField.Flags.GuildMessages,
 		discord.IntentsBitField.Flags.GuildVoiceStates,
 	],
 	partials: [
@@ -62,23 +61,15 @@ client.on('raw', async (data) => {
 
 client.on('ready', async () => {
 	console.log('Ready');
-});
-
-client.on('messageCreate', async (message) => {
-	if (message.author.bot) return;
-	if (message.content === 'p') {
-		const node = Tsumi.getIdealNode();
-		const player = node.createPlayer('919809544648020008');
-		const res = await player.join(
-			'919809544648020012',
-			(data) => {
-				client.guilds.cache.get('919809544648020008').shard.send(data);
-			},
-			{
-				mute: false,
-				deaf: false,
-			}
-		);
-	}
+	const node = Tsumi.getIdealNode();
+	node.on('ready', () => {
+		console.log('Node is ready');
+	});
+	const player = node.joinVoiceChannel('919809544648020008', '919809544648020012');
+	console.log(await node.loadTracks('ytsearch:never gonna give you up'));
+	const res = await player.play({
+		track: 'QAABAwMAXEZvbyBGaWdodGVycyBXaXRoIFJpY2sgQXN0bGV5IC0gTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXAgIC0gTG9uZG9uIE8yIEFyZW5hIDE5IFNlcHRlbWJlciAyMDE3AA9Hb3Rzb21lUGVhcmxKYW0AAAAAAAQ98AALSWRrQ0Vpb0NwMjQAAQAraHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1JZGtDRWlvQ3AyNAEAOmh0dHBzOi8vaS55dGltZy5jb20vdmlfd2VicC9JZGtDRWlvQ3AyNC9tYXhyZXNkZWZhdWx0LndlYnAAAAd5b3V0dWJlAAAAAAAAAAA=',
+	});
+	console.log(res);
 });
 client.login(config.token);
