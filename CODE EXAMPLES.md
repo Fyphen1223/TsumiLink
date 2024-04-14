@@ -4,7 +4,7 @@ const { TsumiInstance, handleRaw } = require('tsumilink');
 const new Tsumi = new TsumiInstance({
 	botId: ,
 	config: {
-		
+
 	}
 });
 
@@ -37,10 +37,10 @@ player.seek();
 player.leave();
 
 player.on('paused', () => {
-	
+
 });
 player.on('resumed', () => {
-	
+
 });
 player.on('error', () => {
 
