@@ -12,15 +12,18 @@ class Player extends EventEmitter {
 			endpoint: null,
 			sessionId: null,
 		};
-		const res = await shard.send(this.guildId, {
-			op: 4,
-			d: {
-				guild_id: this.guildId,
-				channel_id: channelId,
-				self_mute: options?.mute ?? false,
-				self_deaf: options?.deaf ?? false,
-			},
-		});
+		const res = await shard(
+			this.guildId,
+			JSON.stringify({
+				op: 4,
+				d: {
+					guild_id: this.guildId,
+					channel_id: channelId,
+					self_mute: options?.mute ?? false,
+					self_deaf: options?.deaf ?? false,
+				},
+			})
+		);
 		console.log('Hi!');
 		return res;
 	};

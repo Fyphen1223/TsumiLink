@@ -43,6 +43,7 @@ const client = new discord.Client({
 		discord.GatewayIntentBits.GuildWebhooks,
 		discord.GatewayIntentBits.Guilds,
 		discord.GatewayIntentBits.MessageContent,
+		discord.IntentsBitField.Flags.GuildVoiceStates,
 	],
 	partials: [
 		discord.Partials.Channel,
@@ -61,19 +62,23 @@ client.on('raw', async (data) => {
 
 client.on('ready', async () => {
 	console.log('Ready');
-	setTimeout(async () => {
-		console.log('Hi!');
+});
+
+client.on('messageCreate', async (message) => {
+	if (message.author.bot) return;
+	if (message.content === 'p') {
 		const node = Tsumi.getIdealNode();
 		const player = node.createPlayer('919809544648020008');
 		const res = await player.join(
 			'919809544648020012',
-			client.guilds.cache.get('919809544648020008').shard,
+			(data) => {
+				client.guilds.cache.get('919809544648020008').shard.send(data);
+			},
 			{
 				mute: false,
 				deaf: false,
 			}
 		);
-	}, 5000);
+	}
 });
-
 client.login(config.token);
