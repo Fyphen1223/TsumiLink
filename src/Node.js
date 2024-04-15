@@ -26,6 +26,15 @@ class Node extends EventEmitter {
 		this.sendPayload = options.sendPayload;
 		this.sessionId = null;
 	}
+	stats = {
+		memory: {
+			free: 0,
+			used: 0,
+			allocated: 0,
+			reservable: 0,
+		},
+		cpu: { cores: 0, systemLoad: 0, lavalinkLoad: 0 },
+	};
 
 	players = {};
 
@@ -51,6 +60,8 @@ class Node extends EventEmitter {
 				this.players[parsedData.guildId].handleEvents(parsedData);
 			} else if (parsedData.op === 'stats') {
 				this.emit('stats', parsedData);
+				this.stats.memory = parsedData.memory;
+				this.stats.cpu = parsedData.cpu;
 			} else if (parsedData.op === 'playerUpdate') {
 				this.emit('playerUpdate', parsedData);
 			}
@@ -97,8 +108,8 @@ class Node extends EventEmitter {
 				self_deaf: false,
 			},
 		});
+		await this.players[guildId].removeAllListeners();
 		delete this.players[guildId];
-		await this.players.removeAllListeners();
 		return this;
 	};
 

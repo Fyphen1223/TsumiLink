@@ -17,6 +17,7 @@ class TsumiInstance extends EventEmitter {
 			throw new Error('Bot ID or sendPayload is required');
 		this.options = options;
 		this.botId = options.botId;
+		this.userAgent = options?.userAgent || 'Tsumi/0.0.1';
 		global.tsumi.botId = options.botId;
 	}
 	purge = () => {
@@ -31,7 +32,7 @@ class TsumiInstance extends EventEmitter {
 			host: node.host,
 			port: node.port,
 			pass: node.pass,
-			userAgent: node.userAgent,
+			userAgent: this.userAgent,
 			botId: this.botId,
 			sendPayload: this.options.sendPayload,
 		});
@@ -42,9 +43,7 @@ class TsumiInstance extends EventEmitter {
 		});
 	};
 	getIdealNode = () => {
-		const keys = Object.keys(Nodes);
-		const firstKey = keys[0];
-		return Nodes[firstKey];
+		return Nodes[sortNodesBySystemLoad(Nodes)];
 	};
 }
 
@@ -105,6 +104,13 @@ function findValue(obj, searchKey) {
 		}
 	}
 	return null;
+}
+
+function sortNodesBySystemLoad(nodes) {
+	let sortedNodes = Object.entries(nodes).sort(
+		(a, b) => a[1].stats.cpu.systemLoad - b[1].stats.cpu.systemLoad
+	);
+	return sortedNodes.map((node) => node[0]);
 }
 
 module.exports = { TsumiInstance, handleRaw };

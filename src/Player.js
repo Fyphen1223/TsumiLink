@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { EventEmitter } = require('events');
+const { WebSocket } = require('ws');
 
 /**
  * Represents a Player that connects to a node and interacts with a guild's session.
@@ -33,6 +34,8 @@ class Player extends EventEmitter {
 			endpoint: null,
 			sessionId: null,
 		};
+
+		this.listeningWebSocket = null;
 	}
 
 	handleEvents = (data) => {
@@ -48,6 +51,9 @@ class Player extends EventEmitter {
 				break;
 			case 'TrackStuckEvent':
 				this.emit('trackStuck', data.track);
+				break;
+			case 'WebSocketClosedEvent':
+				this.emit('webSocketClosed', data);
 				break;
 		}
 	};
@@ -129,7 +135,7 @@ class Player extends EventEmitter {
 		});
 	};
 
-	resume = async (data) => {
+	resume = async () => {
 		return await this.update({
 			paused: false,
 		});
@@ -145,20 +151,86 @@ class Player extends EventEmitter {
 		}
 	};
 
-	setFilter = async (data) => {};
+	setFilter = async (data) => {
+		return await this.update({
+			filters: data,
+		});
+	};
 
 	getVolume = async () => {
 		const { volume } = await this.get();
 		return volume;
 	};
 
-	getFilters = async () => {};
+	getFilters = async () => {
+		const { filters } = await this.get();
+		return filters;
+	};
 
 	seek = async (int) => {
 		console.log(int);
 		return await this.update({
 			position: int,
 		});
+	};
+
+	startListen = async () => {
+		if (this.listeningWebSocket) return this.listeningWebSocket;
+		const listener = new EventEmitter();
+		const listeningWebSocket = new WebSocket(`${this.node.url}/connection/data`, {
+			headers: {
+				Authorization: this.node.pass,
+				'user-id': this.node.botId,
+				'guild-id': this.guildId,
+				'Client-Name': this.node.userAgent,
+			},
+		});
+		this.listeningWebSocket = listeningWebSocket;
+		listeningWebSocket.on('open', function () {
+			listener.emit('open');
+		});
+		listeningWebSocket.on('message', function (data) {
+			const message = JSON.parse(data);
+			if (message.type === 'startSpeakingEvent') {
+				listener.emit('startSpeaking', message.data);
+				/*
+				{
+  					op: 'speak',
+  					type: 'startSpeakingEvent',
+  					data: { userId: '897295756124360744', guildId: '919809544648020008' }
+				}
+				*/
+			}
+			if (message.type == 'endSpeakingEvent') {
+				listener.emit('endSpeaking', message.data);
+				/*
+				{
+  					op: 'speak',
+  					type: 'endSpeakingEvent',
+  					data: {
+    					userId: '897295756124360744',
+    					guildId: '919809544648020008',
+						data: 'Raw PCM data'
+						type: 'pcm'
+  					}
+				}
+				*/
+			}
+		});
+		listeningWebSocket.on('close', function () {
+			listener.emit('close');
+		});
+		listeningWebSocket.on('error', function () {
+			listener.emit('error');
+		});
+		return listener;
+	};
+
+	stopListen = async () => {
+		if (!this.listeningWebSocket) return false;
+		this.listeningWebSocket.close();
+		this.listeningWebSocket = null;
+		return true;
 	};
 }
 

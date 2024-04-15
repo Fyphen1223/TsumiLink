@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bufferutil": "^4.0.8",
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.14.1",
+    "fluent-ffmpeg": "^2.1.2"
   }
 }

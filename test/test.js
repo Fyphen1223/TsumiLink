@@ -1,6 +1,8 @@
 const { TsumiInstance, handleRaw } = require('../src/TsumiInstance');
 const { Node } = require('../src/Node');
 
+const fs = require('fs');
+
 const discord = require('discord.js');
 
 const config = require('./config.json');
@@ -10,6 +12,7 @@ const Tsumi = new TsumiInstance({
 	sendPayload: (guildId, payload) => {
 		client.guilds.cache.get(guildId).shard.send(payload);
 	},
+	userAgent: 'Tsumi/0.0.2',
 });
 
 Tsumi.addNode({
@@ -67,17 +70,23 @@ client.on('ready', async () => {
 	console.log('Ready');
 	const node = Tsumi.getIdealNode();
 	await wait(1000);
-	const player = node.joinVoiceChannel({
+	const player = await node.joinVoiceChannel({
 		guildId: '919809544648020008',
 		channelId: '919809544648020012',
 	});
-	const data = await node.loadTracks('ytsearch:Avicii Heaven');
+	const data = await node.loadTracks('ytsearch:Alan Walker The Spectre');
 	await player.play({
 		track: data.data[0].encoded,
 	});
 	player.on('trackStart', async (data) => {
-		await wait(10000);
-		await node.leaveVoiceChannel('919809544648020008');
+		await wait(5000);
+		const record = await player.startListen();
+		console.log('Start Speaking');
+		record.on('endSpeaking', (voice) => {
+			const base64Voice = voice.data;
+			const buffer = Buffer.from(base64Voice, 'base64');
+			fs.writeFileSync('./test-voice.ogg', buffer);
+		});
 	});
 });
 client.login(config.token);
