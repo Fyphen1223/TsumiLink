@@ -1,7 +1,17 @@
 const axios = require('axios');
 const { EventEmitter } = require('events');
 
+/**
+ * Represents a Player that connects to a node and interacts with a guild's session.
+ * @extends EventEmitter
+ */
 class Player extends EventEmitter {
+	/**
+	 * Creates a new Player instance.
+	 * @param {Object} options - The options for the Player.
+	 * @param {string} options.guildId - The ID of the guild.
+	 * @param {Object} options.node - The node to connect to.
+	 */
 	constructor(options) {
 		super();
 		this.guildId = options.guildId;
