@@ -1,4 +1,4 @@
 const { Node } = require('./src/Mode');
-const { TsumiInstance } = require('./src/TsumiInstance');
+const { TsumiInstance, handleRaw } = require('./src/TsumiInstance');
 
-module.exports = { Node, TsumiInstance };
+module.exports = { Node, TsumiInstance, handleRaw };

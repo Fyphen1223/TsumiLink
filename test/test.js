@@ -3,6 +3,9 @@ const { Node } = require('../src/Node');
 
 const fs = require('fs');
 
+const ffmpeg = require('fluent-ffmpeg');
+const prism = require('prism-media');
+
 const discord = require('discord.js');
 
 const config = require('./config.json');
@@ -79,13 +82,34 @@ client.on('ready', async () => {
 		track: data.data[0].encoded,
 	});
 	player.on('trackStart', async (data) => {
-		await wait(5000);
+		await wait(500);
 		const record = await player.startListen();
 		console.log('Start Speaking');
 		record.on('endSpeaking', (voice) => {
 			const base64Voice = voice.data;
 			const buffer = Buffer.from(base64Voice, 'base64');
-			fs.writeFileSync('./test-voice.ogg', buffer);
+			let readable = new require('stream').Readable();
+			readable._read = () => {};
+			readable.push(buffer);
+			readable.push(null);
+			let transcoder = new prism.FFmpeg({
+				args: [
+					'-analyzeduration',
+					'0',
+					'-loglevel',
+					'0',
+					'-f',
+					's16le',
+					'-ar',
+					'48000',
+					'-ac',
+					'2',
+				],
+			});
+			const s16le = readable.pipe(transcoder);
+			const opus = s16le.pipe(
+				new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 })
+			);
 		});
 	});
 });
