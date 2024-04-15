@@ -65,11 +65,14 @@ client.on('ready', async () => {
 	node.on('ready', () => {
 		console.log('Node is ready');
 	});
-	const player = node.joinVoiceChannel('919809544648020008', '919809544648020012');
-	console.log(await node.loadTracks('ytsearch:never gonna give you up'));
-	const res = await player.play({
+	const player = node.joinVoiceChannel({
+		guildId: '919809544648020008',
+		channelId: '919809544648020012',
+	});
+	await player.play({
 		track: 'QAABAwMAXEZvbyBGaWdodGVycyBXaXRoIFJpY2sgQXN0bGV5IC0gTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXAgIC0gTG9uZG9uIE8yIEFyZW5hIDE5IFNlcHRlbWJlciAyMDE3AA9Hb3Rzb21lUGVhcmxKYW0AAAAAAAQ98AALSWRrQ0Vpb0NwMjQAAQAraHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1JZGtDRWlvQ3AyNAEAOmh0dHBzOi8vaS55dGltZy5jb20vdmlfd2VicC9JZGtDRWlvQ3AyNC9tYXhyZXNkZWZhdWx0LndlYnAAAAd5b3V0dWJlAAAAAAAAAAA=',
 	});
-	console.log(res);
+	await player.setVolume(100);
+	console.log(await player.getVolume());
 });
 client.login(config.token);

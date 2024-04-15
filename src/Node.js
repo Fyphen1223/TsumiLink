@@ -26,24 +26,28 @@ class Node extends EventEmitter {
 		this.sendPayload = options.sendPayload;
 		this.sessionId = null;
 	}
+
 	players = {};
+
 	startWs = () => {
-		this.ws = new WebSocket(`${this.url}/v4/websocket`, {
-			headers: {
-				Authorization: this.pass,
-				'User-Id': this.botId,
-				'Client-name': this.userAgent,
-			},
-		});
+		try {
+			this.ws = new WebSocket(`${this.url}/v4/websocket`, {
+				headers: {
+					Authorization: this.pass,
+					'User-Id': this.botId,
+					'Client-name': this.userAgent,
+				},
+			});
+		} catch (err) {
+			throw new Error(err.stack);
+		}
 		this.ws.on('message', (data) => {
 			const parsedData = JSON.parse(data.toString());
-			this.emit('raw', parsedData);
 			if (parsedData.op === 'ready') {
-				this.emit('ready');
+				this.emit('ready', parsedData);
 				this.sessionId = parsedData.sessionId;
 			} else if (parsedData.op === 'event') {
-				this.emit(parsedData);
-				console.log(parsedData);
+				this.emit('event', parsedData);
 			} else if (parsedData.op === 'stats') {
 				this.emit('stats', parsedData);
 			} else if (parsedData.op === 'playerUpdate') {
@@ -52,34 +56,38 @@ class Node extends EventEmitter {
 		});
 		return this;
 	};
-	joinVoiceChannel = (guildId, channelId, options) => {
-		global.tsumi.vcsData[guildId] = {
+
+	joinVoiceChannel = (options) => {
+		global.tsumi.vcsData[options.guildId] = {
 			token: null,
 			endpoint: null,
 			sessionId: null,
 		};
-		this.sendPayload(guildId, {
+		this.sendPayload(options.guildId, {
 			op: 4,
 			d: {
-				guild_id: guildId,
-				channel_id: channelId,
-				self_mute: options?.mute ?? false,
-				self_deaf: options?.deaf ?? false,
+				guild_id: options.guildId,
+				channel_id: options.channelId,
+				self_mute: options.options?.mute ?? false,
+				self_deaf: options.options?.deaf ?? false,
 			},
 		});
 		const player = new Player({
-			guildId,
+			guildId: options.guildId,
 			node: this,
 		});
-		this.players = { ...this.players, [guildId]: player };
+		this.players = { ...this.players, [options.guildId]: player };
 		return player;
 	};
+
 	getPlayers = () => {
 		return this.players;
 	};
+
 	getPlayer = (guildId) => {
 		return this.players[guildId];
 	};
+
 	loadTracks = async (data) => {
 		const res = await axios.get(`${this.fetchUrl}/v4/loadtracks?identifier=${data}`, {
 			headers: {
