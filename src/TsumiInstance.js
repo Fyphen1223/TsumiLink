@@ -80,6 +80,19 @@ function handleRaw(data) {
 				...global.tsumi.vcsData[data.d.guild_id],
 				sessionId: data.d.session_id,
 			};
+			if (
+				global.tsumi.vcsData[data.d.guild_id].sessionId &&
+				global.tsumi.vcsData[data.d.guild_id].token
+			) {
+				const player = findValue(Nodes, data.d.guild_id);
+				player.connectionInfo = {
+					token: global.tsumi.vcsData[data.d.guild_id].token,
+					endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
+					sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+				};
+				player.connect();
+				delete global.tsumi.vcsData[data.d.guild_id];
+			}
 			break;
 		}
 	}

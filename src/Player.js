@@ -49,6 +49,7 @@ class Player extends EventEmitter {
 	};
 
 	update = async (data) => {
+		if (!this.node.sessionId) throw new Error('Node is not ready');
 		const res = await axios.patch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
 			data,
@@ -62,6 +63,7 @@ class Player extends EventEmitter {
 	};
 
 	get = async () => {
+		if (!this.node.sessionId) throw new Error('Node is not ready');
 		const res = await axios.get(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
 			{

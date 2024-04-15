@@ -59,12 +59,14 @@ client.on('raw', async (data) => {
 	handleRaw(data);
 });
 
+function wait(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 client.on('ready', async () => {
 	console.log('Ready');
 	const node = Tsumi.getIdealNode();
-	node.on('ready', () => {
-		console.log('Node is ready');
-	});
+	await wait(1000);
 	const player = node.joinVoiceChannel({
 		guildId: '919809544648020008',
 		channelId: '919809544648020012',
@@ -72,7 +74,6 @@ client.on('ready', async () => {
 	await player.play({
 		track: 'QAABAwMAXEZvbyBGaWdodGVycyBXaXRoIFJpY2sgQXN0bGV5IC0gTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXAgIC0gTG9uZG9uIE8yIEFyZW5hIDE5IFNlcHRlbWJlciAyMDE3AA9Hb3Rzb21lUGVhcmxKYW0AAAAAAAQ98AALSWRrQ0Vpb0NwMjQAAQAraHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1JZGtDRWlvQ3AyNAEAOmh0dHBzOi8vaS55dGltZy5jb20vdmlfd2VicC9JZGtDRWlvQ3AyNC9tYXhyZXNkZWZhdWx0LndlYnAAAAd5b3V0dWJlAAAAAAAAAAA=',
 	});
-	await player.setVolume(100);
-	console.log(await player.getVolume());
+	await player.setVolume(50);
 });
 client.login(config.token);

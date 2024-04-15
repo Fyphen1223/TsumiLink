@@ -44,7 +44,7 @@ class Node extends EventEmitter {
 		this.ws.on('message', (data) => {
 			const parsedData = JSON.parse(data.toString());
 			if (parsedData.op === 'ready') {
-				this.emit('ready', parsedData);
+				this.emit('ready');
 				this.sessionId = parsedData.sessionId;
 			} else if (parsedData.op === 'event') {
 				this.emit('event', parsedData);
@@ -58,6 +58,10 @@ class Node extends EventEmitter {
 	};
 
 	joinVoiceChannel = (options) => {
+		if (!this.sessionId)
+			throw new Error(
+				'Node is not ready, please wait for it to receive session ID to work properly.'
+			);
 		global.tsumi.vcsData[options.guildId] = {
 			token: null,
 			endpoint: null,

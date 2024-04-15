@@ -5,9 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  bufferutil:
+    specifier: ^4.0.8
+    version: 4.0.8
   discord.js:
     specifier: ^14.14.1
-    version: 14.14.1
+    version: 14.14.1(bufferutil@4.0.8)
 
 packages:
 
@@ -61,7 +64,7 @@ packages:
     engines: {node: '>=16.11.0'}
     dev: false
 
-  /@discordjs/ws@1.0.2:
+  /@discordjs/ws@1.0.2(bufferutil@4.0.8):
     resolution: {integrity: sha512-+XI82Rm2hKnFwAySXEep4A7Kfoowt6weO6381jgW+wVdTpMS/56qCvoXyFRY0slcv7c/U8My2PwIB2/wEaAh7Q==}
     engines: {node: '>=16.11.0'}
     dependencies:
@@ -73,7 +76,7 @@ packages:
       '@vladfrangu/async_event_emitter': 2.2.4
       discord-api-types: 0.37.61
       tslib: 2.6.2
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -119,11 +122,19 @@ packages:
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
     dev: false
 
+  /bufferutil@4.0.8:
+    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
+    engines: {node: '>=6.14.2'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.8.0
+    dev: false
+
   /discord-api-types@0.37.61:
     resolution: {integrity: sha512-o/dXNFfhBpYHpQFdT6FWzeO7pKc838QeeZ9d91CfVAtpr5XLK4B/zYxQbYgPdoMiTDvJfzcsLW5naXgmHGDNXw==}
     dev: false
 
-  /discord.js@14.14.1:
+  /discord.js@14.14.1(bufferutil@4.0.8):
     resolution: {integrity: sha512-/hUVzkIerxKHyRKopJy5xejp4MYKDPTszAnpYxzVVv4qJYf+Tkt+jnT2N29PIPschicaEEpXwF2ARrTYHYwQ5w==}
     engines: {node: '>=16.11.0'}
     dependencies:
@@ -132,7 +143,7 @@ packages:
       '@discordjs/formatters': 0.3.3
       '@discordjs/rest': 2.2.0
       '@discordjs/util': 1.0.2
-      '@discordjs/ws': 1.0.2
+      '@discordjs/ws': 1.0.2(bufferutil@4.0.8)
       '@sapphire/snowflake': 3.5.1
       '@types/ws': 8.5.9
       discord-api-types: 0.37.61
@@ -140,7 +151,7 @@ packages:
       lodash.snakecase: 4.1.1
       tslib: 2.6.2
       undici: 5.27.2
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -162,6 +173,11 @@ packages:
     resolution: {integrity: sha512-/k20Lg2q8LE5xiaaSkMXk4sfvI+9EGEykFS4b0CHHGWqDYU0bGUFSwchNOMA56D7TCs9GwVTkqe9als1/ns8UQ==}
     dev: false
 
+  /node-gyp-build@4.8.0:
+    resolution: {integrity: sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==}
+    hasBin: true
+    dev: false
+
   /ts-mixer@6.0.4:
     resolution: {integrity: sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA==}
     dev: false
@@ -181,7 +197,7 @@ packages:
       '@fastify/busboy': 2.1.1
     dev: false
 
-  /ws@8.14.2:
+  /ws@8.14.2(bufferutil@4.0.8):
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -192,4 +208,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dependencies:
+      bufferutil: 4.0.8
     dev: false
