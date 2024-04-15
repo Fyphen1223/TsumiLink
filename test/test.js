@@ -71,9 +71,13 @@ client.on('ready', async () => {
 		guildId: '919809544648020008',
 		channelId: '919809544648020012',
 	});
+	const data = await node.loadTracks('ytsearch:Avicii Heaven');
 	await player.play({
-		track: 'QAABAwMAXEZvbyBGaWdodGVycyBXaXRoIFJpY2sgQXN0bGV5IC0gTmV2ZXIgR29ubmEgR2l2ZSBZb3UgVXAgIC0gTG9uZG9uIE8yIEFyZW5hIDE5IFNlcHRlbWJlciAyMDE3AA9Hb3Rzb21lUGVhcmxKYW0AAAAAAAQ98AALSWRrQ0Vpb0NwMjQAAQAraHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1JZGtDRWlvQ3AyNAEAOmh0dHBzOi8vaS55dGltZy5jb20vdmlfd2VicC9JZGtDRWlvQ3AyNC9tYXhyZXNkZWZhdWx0LndlYnAAAAd5b3V0dWJlAAAAAAAAAAA=',
+		track: data.data[0].encoded,
 	});
-	await player.setVolume(50);
+	player.on('trackStart', async (data) => {
+		await wait(10000);
+		await node.leaveVoiceChannel('919809544648020008');
+	});
 });
 client.login(config.token);

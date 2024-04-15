@@ -33,11 +33,25 @@ class Player extends EventEmitter {
 			endpoint: null,
 			sessionId: null,
 		};
-
-		this.node.ws.on('message', (data) => {
-			this.emit('message', data);
-		});
 	}
+
+	handleEvents = (data) => {
+		switch (data.type) {
+			case 'TrackStartEvent':
+				this.emit('trackStart', data.track);
+				break;
+			case 'TrackEndEvent':
+				this.emit('trackEnd', data.track);
+				break;
+			case 'TrackExceptionEvent':
+				this.emit('trackException', data.track);
+				break;
+			case 'TrackStuckEvent':
+				this.emit('trackStuck', data.track);
+				break;
+		}
+	};
+
 	connect = async () => {
 		this.update({
 			voice: {
@@ -60,6 +74,17 @@ class Player extends EventEmitter {
 			}
 		);
 		return res.data;
+	};
+
+	destroy = async () => {
+		return await axios.delete(
+			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
+			{
+				headers: {
+					Authorization: this.node.pass,
+				},
+			}
+		);
 	};
 
 	get = async () => {
@@ -98,9 +123,17 @@ class Player extends EventEmitter {
 		return res.data;
 	};
 
-	pause = async (data) => {};
+	pause = async () => {
+		return await this.update({
+			paused: true,
+		});
+	};
 
-	resume = async (data) => {};
+	resume = async (data) => {
+		return await this.update({
+			paused: false,
+		});
+	};
 
 	setVolume = async (data) => {
 		if (data >= 1000 || data < 0) {
@@ -120,6 +153,13 @@ class Player extends EventEmitter {
 	};
 
 	getFilters = async () => {};
+
+	seek = async (int) => {
+		console.log(int);
+		return await this.update({
+			position: int,
+		});
+	};
 }
 
 module.exports = { Player };

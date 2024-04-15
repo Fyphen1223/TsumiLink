@@ -48,6 +48,7 @@ class Node extends EventEmitter {
 				this.sessionId = parsedData.sessionId;
 			} else if (parsedData.op === 'event') {
 				this.emit('event', parsedData);
+				this.players[parsedData.guildId].handleEvents(parsedData);
 			} else if (parsedData.op === 'stats') {
 				this.emit('stats', parsedData);
 			} else if (parsedData.op === 'playerUpdate') {
@@ -57,7 +58,7 @@ class Node extends EventEmitter {
 		return this;
 	};
 
-	joinVoiceChannel = (options) => {
+	joinVoiceChannel = async (options) => {
 		if (!this.sessionId)
 			throw new Error(
 				'Node is not ready, please wait for it to receive session ID to work properly.'
@@ -67,7 +68,7 @@ class Node extends EventEmitter {
 			endpoint: null,
 			sessionId: null,
 		};
-		this.sendPayload(options.guildId, {
+		await this.sendPayload(options.guildId, {
 			op: 4,
 			d: {
 				guild_id: options.guildId,
@@ -82,6 +83,23 @@ class Node extends EventEmitter {
 		});
 		this.players = { ...this.players, [options.guildId]: player };
 		return player;
+	};
+
+	leaveVoiceChannel = async (guildId) => {
+		if (!this.players[guildId]) throw new Error('Player not found');
+		await this.players[guildId].destroy();
+		await this.sendPayload(guildId, {
+			op: 4,
+			d: {
+				guild_id: guildId,
+				channel_id: null,
+				self_mute: false,
+				self_deaf: false,
+			},
+		});
+		delete this.players[guildId];
+		await this.players.removeAllListeners();
+		return this;
 	};
 
 	getPlayers = () => {
