@@ -1,7 +1,12 @@
 # TsumiLink
 
 Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.
+
 NOT WELL-DOCUMENTED, BE CAREFUL WHEN YOU USE THIS CLIENT. YOU MIGHT NEED TO LOOK THE CODE TO REALIZE WHAT THE CODE IS DOING.
+
+# Docs
+
+See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation. 
 
 # Example
 
@@ -81,25 +86,3 @@ client.on('ready', async () => {
 });
 client.login('Yout Bot token goes here');
 ```
-
-# API
-
-## Player
-
-Event: trackStart, trackEnd, truckStuck, trackException, WebSocketClosed
-
-Methods: play, pause, resume, seek, setVolume, getVolume, setFilter, getFilters, startListen, stopListen,
-Internal methods (still accessible externally): get, handleEvents, connect, update, destroy
-
-## Node
-
-Event:
-
-Methods: joinVoiceChannel, leaveVoiceChannel, getPlayers, getPlayer, loadTracks
-Internal methods (still accessible externally): startWs
-
-## TsumiInstance
-
-Event:
-
-Methods: purge, getIdealNode, addNode
