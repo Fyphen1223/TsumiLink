@@ -2,12 +2,12 @@ const axios = require('axios');
 const { EventEmitter } = require('events');
 const { WebSocket } = require('ws');
 
+/**
+ * Represents a Player that connects to a node and interacts with a guild's session.
+ * @extends EventEmitter
+ * @class
+ */
 class Player extends EventEmitter {
-	/**
-	 * Represents a Player that connects to a node and interacts with a guild's session.
-	 * @extends EventEmitter
-	 * @class
-	 */
 	constructor(options) {
 		/**
 		 * Creates a new Player instance.
@@ -41,17 +41,17 @@ class Player extends EventEmitter {
 
 		/**
 		 * Listening web socket, works with NodeLink only
-		 * @return {Object} WebSocket instance
+		 * @type {Object}
 		 */
 		this.listeningWebSocket = null;
 	}
 
+	/**
+	 * Function for handling events
+	 * @function
+	 * @param {Object} data - The data to handle
+	 */
 	handleEvents = (data) => {
-		/**
-		 * Function for handling events
-		 * @type {Function}
-		 * @param {Object} data The data to handle
-		 */
 		switch (data.type) {
 			case 'TrackStartEvent':
 				this.emit('trackStart', data.track);
@@ -71,11 +71,12 @@ class Player extends EventEmitter {
 		}
 	};
 
+	/**
+	 * Start connection between LavaLink/NodeLink and Discord voice server
+	 * @function
+	 * @async
+	 */
 	connect = async () => {
-		/**
-		 * Start connection between LavaLink/NodeLink and Discord voice server
-		 * @type {Function}
-		 */
 		this.update({
 			voice: {
 				token: this.connectionInfo.token,
@@ -85,13 +86,14 @@ class Player extends EventEmitter {
 		});
 	};
 
+	/**
+	 * Update player data
+	 * @function
+	 * @async
+	 * @param {Object} data - The data to update
+	 * @return {Object} - Request result
+	 */
 	update = async (data) => {
-		/**
-		 * Update player data
-		 * @type {Function}
-		 * @param {Object} data - The data to update
-		 * @return {Object} Request result
-		 */
 		if (!this.node.sessionId) throw new Error('Node is not ready');
 		const res = await axios.patch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
@@ -105,12 +107,13 @@ class Player extends EventEmitter {
 		return res.data;
 	};
 
+	/**
+	 * Destroy this player on the server
+	 * @function
+	 * @async
+	 * @return {Object} - Request result
+	 */
 	destroy = async () => {
-		/**
-		 * Destroy this player on the server
-		 * @type {Function}
-		 * @return {Object} Request result
-		 */
 		return await axios.delete(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
 			{
@@ -121,12 +124,13 @@ class Player extends EventEmitter {
 		);
 	};
 
+	/**
+	 * Get this player's information
+	 * @function
+	 * @async
+	 * @return {Object} - This player's information
+	 */
 	get = async () => {
-		/**
-		 * Get this player's information
-		 * @type {Function}
-		 * @return {Object} This player's information
-		 */
 		if (!this.node.sessionId) throw new Error('Node is not ready');
 		const res = await axios.get(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
@@ -139,15 +143,16 @@ class Player extends EventEmitter {
 		return res.data;
 	};
 
+	/**
+	 * Plays a track
+	 * @function
+	 * @async
+	 * @param {Object} data - The data to play
+	 * @param {string} data.track - The base64 encoded track to play
+	 * @param {Object} options - The options for playing the track
+	 * @return {Object} - Request result
+	 */
 	play = async (data) => {
-		/**
-		 * Plays a track
-		 * @type {Function}
-		 * @param {Object} data The data to play
-		 * @param {string} data.track The base64 encoded track to play
-		 * @param {Object} options The options for playing the track
-		 * @returns {Object} Request result
-		 */
 		const res = await axios.patch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
 			{
@@ -164,35 +169,38 @@ class Player extends EventEmitter {
 		return res.data;
 	};
 
+	/**
+	 * Pause playing
+	 * @function
+	 * @async
+	 * @return {Object} - Request result
+	 */
 	pause = async () => {
-		/**
-		 * Pause playing
-		 * @type {Function}
-		 * @return {Object} Request result
-		 */ _;
 		return await this.update({
 			paused: true,
 		});
 	};
 
+	/**
+	 * Resume playing
+	 * @function
+	 * @async
+	 * @return {Object} - Request result
+	 */
 	resume = async () => {
-		/**
-		 * Resume playing
-		 * @type {Function}
-		 * @return {Object} Request result
-		 */
 		return await this.update({
 			paused: false,
 		});
 	};
 
+	/**
+	 * Set volume
+	 * @function
+	 * @async
+	 * @param {number} data - The volume to set
+	 * @return {Object} - Request result
+	 */
 	setVolume = async (data) => {
-		/**
-		 * Set volume
-		 * @type {Function}
-		 * @param {number} data The volume to set
-		 * @return {Object} Request result
-		 */
 		if (data >= 1000 || data < 0) {
 			throw new Error('Volume must be between 0 and 1000');
 		} else {
@@ -202,57 +210,62 @@ class Player extends EventEmitter {
 		}
 	};
 
+	/**
+	 * Set filter
+	 * @function
+	 * @async
+	 * @param {Object} data - The filter to set
+	 * @return {Object} - This node instance
+	 */
 	setFilter = async (data) => {
-		/**
-		 * Set filter
-		 * @type {Function}
-		 * @param {Object} data The filter to set
-		 * @return {Object} This node instance
-		 */
 		return await this.update({
 			filters: data,
 		});
 	};
 
+	/**
+	 * Get volume
+	 * @function
+	 * @async
+	 * @return {number} - Volume
+	 */
 	getVolume = async () => {
-		/**
-		 * Get volume
-		 * @type {Function}
-		 * @return {number} Volume
-		 */
 		const { volume } = await this.get();
 		return volume;
 	};
 
+	/**
+	 * Get filters
+	 * @function
+	 * @async
+	 * @return {Object} - Filters
+	 */
 	getFilters = async () => {
-		/**
-		 * Get filters
-		 * @type {Function}
-		 * @return {Object} Filters
-		 */
 		const { filters } = await this.get();
 		return filters;
 	};
 
+	/**
+	 * Seek track
+	 * @function
+	 * @async
+	 * @param {number} int - The position to seek to
+	 * @return {number} - Request result
+	 */
 	seek = async (int) => {
-		/**
-		 * Seek track
-		 * @type {Function}
-		 * @param {number} int The position to seek to
-		 * @return {number} Request result
-		 */
 		console.log(int);
 		return await this.update({
 			position: int,
 		});
 	};
 
+	/**
+	 * Start listening on VC
+	 * @function
+	 * @async
+	 * @return {Object} - An event emitter for listening
+	 */
 	startListen = async () => {
-		/**
-		 * Start listening on VC
-		 * @type {Function}
-		 * @return {Object} An event emitter for listening
-		 */
 		if (this.listeningWebSocket) return this.listeningWebSocket;
 		const listener = new EventEmitter();
 		const listeningWebSocket = new WebSocket(`${this.node.url}/connection/data`, {
@@ -304,12 +317,13 @@ class Player extends EventEmitter {
 		return listener;
 	};
 
+	/**
+	 * Stop listening on VC
+	 * @function
+	 * @async
+	 * @return {Boolean} Return true if stopped listening
+	 */
 	stopListen = async () => {
-		/**
-		 * Stop listening on VC
-		 * @type {Function}
-		 * @return {Boolean} Return true if stopped listening
-		 */
 		if (!this.listeningWebSocket) return false;
 		this.listeningWebSocket.close();
 		this.listeningWebSocket = null;
