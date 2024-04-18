@@ -3,6 +3,10 @@ const { EventEmitter } = require('node:events');
 const { Player } = require('./Player');
 const axios = require('axios');
 
+/**
+ * Represents a Player that connects to a node and interacts with a guild's session.
+ * @extends EventEmitter
+ */
 class Node extends EventEmitter {
 	constructor(options) {
 		super();
