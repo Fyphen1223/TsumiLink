@@ -19,11 +19,11 @@ global.tsumi.vcsData = {};
  */
 var Nodes = {};
 
-/**
- * Represents a Tsumi instance.
- * @class
- */
 class TsumiInstance extends EventEmitter {
+	/**
+	 * Represents a Tsumi instance.
+	 * @class
+	 */
 	constructor(options) {
 		super();
 		/**
@@ -41,22 +41,22 @@ class TsumiInstance extends EventEmitter {
 		global.tsumi.botId = options.botId;
 	}
 
-	/**
-	 * Purge all nodes
-	 * @type {Function}
-	 * @return {Boolean} True if successful
-	 */
 	purge = () => {
+		/**
+		 * Purge all nodes
+		 * @type {Function}
+		 * @return {Boolean} True if successful
+		 */
 		Nodes = {};
 		return true;
 	};
 
-	/**
-	 * Add a node to the instance
-	 * @type {Function}
-	 * @param {Object} node The node to add
-	 */
 	addNode = (node) => {
+		/**
+		 * Add a node to the instance
+		 * @type {Function}
+		 * @param {Object} node The node to add
+		 */
 		if (!node.host || !node.port || !node.pass)
 			throw new Error('Host, port, and pass are required');
 		const newNode = new Node({
@@ -76,22 +76,22 @@ class TsumiInstance extends EventEmitter {
 		});
 	};
 
-	/**
-	 * Get the ideal node
-	 * @type {Function}
-	 * @return {Object} The ideal node
-	 */
 	getIdealNode = () => {
+		/**
+		 * Get the ideal node
+		 * @type {Function}
+		 * @return {Object} The ideal node
+		 */
 		return Nodes[sortNodesBySystemLoad(Nodes)];
 	};
 }
 
-/**
- * Handling raw events for players
- * @type {Function}
- * @param {Object} data The data to handle
- */
 function handleRaw(data) {
+	/**
+	 * Handling raw events for players
+	 * @type {Function}
+	 * @param {Object} data The data to handle
+	 */
 	switch (data.t) {
 		case 'VOICE_SERVER_UPDATE': {
 			if (!global.tsumi.vcsData[data.d.guild_id]) return;
@@ -141,14 +141,14 @@ function handleRaw(data) {
 	}
 }
 
-/**
- * Handle finding values in an object
- * @type {Function}
- * @param {Object} obj The object to search
- * @param {string} searchKey The key to search for
- * @return {Object} The value of the key
- */
 function findValue(obj, searchKey) {
+	/**
+	 * Handle finding values in an object
+	 * @type {Function}
+	 * @param {Object} obj The object to search
+	 * @param {string} searchKey The key to search for
+	 * @return {Object} The value of the key
+	 */
 	for (let key in obj) {
 		if (obj[key].players && obj[key].players[searchKey]) {
 			return obj[key].players[searchKey];
@@ -157,13 +157,13 @@ function findValue(obj, searchKey) {
 	return null;
 }
 
-/**
- * Sort nodes by system load
- * @type {Function}
- * @param {Object} nodes The nodes to sort
- * @return {Object} Nodes sorted by system load
- */
 function sortNodesBySystemLoad(nodes) {
+	/**
+	 * Sort nodes by system load
+	 * @type {Function}
+	 * @param {Object} nodes The nodes to sort
+	 * @return {Object} Nodes sorted by system load
+	 */
 	let sortedNodes = Object.entries(nodes).sort(
 		(a, b) => a[1].stats.cpu.systemLoad - b[1].stats.cpu.systemLoad
 	);
