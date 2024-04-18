@@ -22,6 +22,7 @@ var Nodes = {};
 class TsumiInstance extends EventEmitter {
 	/**
 	 * Represents a Tsumi instance.
+	 * @extends EventEmitter
 	 * @class
 	 */
 	constructor(options) {

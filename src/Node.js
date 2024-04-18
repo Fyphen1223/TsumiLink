@@ -3,11 +3,12 @@ const { EventEmitter } = require('node:events');
 const { Player } = require('./Player');
 const axios = require('axios');
 
-/**
- * Represents a Player that connects to a node and interacts with a guild's session.
- * @extends EventEmitter
- */
 class Node extends EventEmitter {
+	/**
+	 * Represents a Player that connects to a node and interacts with a guild's session.
+	 * @extends EventEmitter
+	 * @class
+	 */
 	constructor(options) {
 		super();
 		/**
@@ -90,12 +91,12 @@ class Node extends EventEmitter {
 	 */
 	players = {};
 
-	/**
-	 * Start WS with LavaLink server
-	 * @type {Function}
-	 * @return {Object} This node instance
-	 */
 	startWs = () => {
+		/**
+		 * Start WS with LavaLink server
+		 * @type {Function}
+		 * @return {Object} This node instance
+		 */
 		try {
 			this.ws = new WebSocket(`${this.url}/v4/websocket`, {
 				headers: {
@@ -126,16 +127,16 @@ class Node extends EventEmitter {
 		return this;
 	};
 
-	/**
-	 * Join voice channel
-	 * @type {Function}
-	 * @param {Object} options - Object that contains the options for the voice channel
-	 * @param {String} options.guildId - Guild ID
-	 * @param {String} options.channelId - Channel ID
-	 * @param {Object} options.options - Options for the voice channel
-	 * @return {Object} Player instance
-	 */
 	joinVoiceChannel = async (options) => {
+		/**
+		 * Join voice channel
+		 * @type {Function}
+		 * @param {Object} options - Object that contains the options for the voice channel
+		 * @param {String} options.guildId - Guild ID
+		 * @param {String} options.channelId - Channel ID
+		 * @param {Object} options.options - Options for the voice channel
+		 * @return {Object} Player instance
+		 */
 		if (!this.sessionId)
 			throw new Error(
 				'Node is not ready, please wait for it to receive session ID to work properly.'
@@ -162,13 +163,13 @@ class Node extends EventEmitter {
 		return player;
 	};
 
-	/**
-	 * Leave voice channel
-	 * @type {Function}
-	 * @param {String} guildId - Guild ID
-	 * @return {Object} This node instance
-	 */
 	leaveVoiceChannel = async (guildId) => {
+		/**
+		 * Leave voice channel
+		 * @type {Function}
+		 * @param {String} guildId - Guild ID
+		 * @return {Object} This node instance
+		 */
 		if (!this.players[guildId]) throw new Error('Player not found');
 		await this.players[guildId].destroy();
 		await this.sendPayload(guildId, {
@@ -185,12 +186,12 @@ class Node extends EventEmitter {
 		return this;
 	};
 
-	/**
-	 * Get players
-	 * @type {Function}
-	 * @return {Object} Players
-	 */
 	getPlayers = () => {
+		/**
+		 * Get players
+		 * @type {Function}
+		 * @return {Object} Players
+		 */
 		return this.players;
 	};
 
@@ -203,12 +204,12 @@ class Node extends EventEmitter {
 		return this.players[guildId];
 	};
 
-	/**
-	 * Load tracks
-	 * @type {Function}
-	 * @return {Object} Load results
-	 */
 	loadTracks = async (data) => {
+		/**
+		 * Load tracks
+		 * @type {Function}
+		 * @return {Object} Load results
+		 */
 		const res = await axios.get(`${this.fetchUrl}/v4/loadtracks?identifier=${data}`, {
 			headers: {
 				Authorization: this.pass,
