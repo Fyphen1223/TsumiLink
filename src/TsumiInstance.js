@@ -43,6 +43,7 @@ class TsumiInstance extends EventEmitter {
 
 	/**
 	 * Purge all nodes
+	 * @type {Function}
 	 * @return {Boolean} True if successful
 	 */
 	purge = () => {
@@ -52,6 +53,7 @@ class TsumiInstance extends EventEmitter {
 
 	/**
 	 * Add a node to the instance
+	 * @type {Function}
 	 * @param {Object} node The node to add
 	 */
 	addNode = (node) => {
@@ -76,6 +78,7 @@ class TsumiInstance extends EventEmitter {
 
 	/**
 	 * Get the ideal node
+	 * @type {Function}
 	 * @return {Object} The ideal node
 	 */
 	getIdealNode = () => {
@@ -85,6 +88,7 @@ class TsumiInstance extends EventEmitter {
 
 /**
  * Handling raw events for players
+ * @type {Function}
  * @param {Object} data The data to handle
  */
 function handleRaw(data) {
@@ -139,6 +143,7 @@ function handleRaw(data) {
 
 /**
  * Handle finding values in an object
+ * @type {Function}
  * @param {Object} obj The object to search
  * @param {string} searchKey The key to search for
  * @return {Object} The value of the key
@@ -154,6 +159,7 @@ function findValue(obj, searchKey) {
 
 /**
  * Sort nodes by system load
+ * @type {Function}
  * @param {Object} nodes The nodes to sort
  * @return {Object} Nodes sorted by system load
  */
