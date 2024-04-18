@@ -17,15 +17,59 @@ class Node extends EventEmitter {
 		 * @param {string} options.botId - Bot ID
 		 */
 
+		/**
+		 * This Node's name
+		 * @type {String}
+		 */
 		this.serverName = options.serverName || 'Tsumi';
+
+		/**
+		 * This Node's WS URL
+		 * @type {String}
+		 */
 		this.url = `ws${options.secure ? 's' : ''}://${options.host}:${options.port}`;
+
+		/**
+		 * This Node's API URL
+		 * @type {String}
+		 */
 		this.fetchUrl = `http${options.secure ? 's' : ''}://${options.host}:${options.port}`;
+
+		/**
+		 * This Node's password
+		 * @type {String}
+		 */
 		this.pass = options.pass;
+
+		/**
+		 * Useragent used to connect this node
+		 * @type {String}
+		 */
 		this.userAgent = options.userAgent || 'Tsumi/0.0.1';
+
+		/**
+		 * This Node's ID
+		 * @type {String}
+		 */
 		this.botId = options.botId;
+
+		/**
+		 * This Node's function to send payload to Discord server
+		 * @type {Function}
+		 */
 		this.sendPayload = options.sendPayload;
+
+		/**
+		 * This Node's session ID
+		 * @type {String}
+		 */
 		this.sessionId = null;
 	}
+
+	/**
+	 * This Node's stats
+	 * @type {Object}
+	 */
 	stats = {
 		memory: {
 			free: 0,
@@ -36,8 +80,16 @@ class Node extends EventEmitter {
 		cpu: { cores: 0, systemLoad: 0, lavalinkLoad: 0 },
 	};
 
+	/**
+	 * This Node's player
+	 * @type {Object}
+	 */
 	players = {};
 
+	/**
+	 * Start WS with LavaLink server
+	 * @return {Object} This node instance
+	 */
 	startWs = () => {
 		try {
 			this.ws = new WebSocket(`${this.url}/v4/websocket`, {
@@ -69,6 +121,14 @@ class Node extends EventEmitter {
 		return this;
 	};
 
+	/**
+	 * Join voice channel
+	 * @param {Object} options - Object that contains the options for the voice channel
+	 * @param {String} options.guildId - Guild ID
+	 * @param {String} options.channelId - Channel ID
+	 * @param {Object} options.options - Options for the voice channel
+	 * @return {Object} Player instance
+	 */
 	joinVoiceChannel = async (options) => {
 		if (!this.sessionId)
 			throw new Error(
@@ -96,6 +156,11 @@ class Node extends EventEmitter {
 		return player;
 	};
 
+	/**
+	 * Leave voice channel
+	 * @param {String} guildId - Guild ID
+	 * @return {Object} This node instance
+	 */
 	leaveVoiceChannel = async (guildId) => {
 		if (!this.players[guildId]) throw new Error('Player not found');
 		await this.players[guildId].destroy();
@@ -113,14 +178,26 @@ class Node extends EventEmitter {
 		return this;
 	};
 
+	/**
+	 * Get players
+	 * @return {Object} Players
+	 */
 	getPlayers = () => {
 		return this.players;
 	};
 
+	/**
+	 * Get player on specified guild
+	 * @return {Object} The player for the guild
+	 */
 	getPlayer = (guildId) => {
 		return this.players[guildId];
 	};
 
+	/**
+	 * Load tracks
+	 * @return {Object} Load results
+	 */
 	loadTracks = async (data) => {
 		const res = await axios.get(`${this.fetchUrl}/v4/loadtracks?identifier=${data}`, {
 			headers: {
