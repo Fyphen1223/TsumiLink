@@ -4,7 +4,8 @@
 	"description": "Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"docs": "./node_modules/.bin/jsdoc ./src -d ./docs"
 	},
 	"keywords": [
 		"LavaLink",
