@@ -1,11 +1,24 @@
 const { EventEmitter } = require('events');
-const WebSocket = require('ws');
 const { Node } = require('./Node');
-const { Player } = require('./Player');
-const { send } = require('process');
+
+/**
+ * Tsumi global variables
+ * @type {Object}
+ */
 global.tsumi = {};
+
+/**
+ * Tsumi global VC data
+ * @type {Object}
+ */
 global.tsumi.vcsData = {};
+
+/**
+ * Nodes
+ * @type {Object}
+ */
 var Nodes = {};
+
 /**
  * Represents a Tsumi instance.
  * @class
@@ -13,6 +26,13 @@ var Nodes = {};
 class TsumiInstance extends EventEmitter {
 	constructor(options) {
 		super();
+		/**
+		 * @param {Object} options
+		 * @param {string} options.botId The bot ID
+		 * @param {Function} options.sendPayload The function to send payloads
+		 * @param {string} options.userAgent The user agent to use
+		 * @return {Object} An event emitter for listening
+		 */
 		if (!options?.botId || !options?.sendPayload)
 			throw new Error('Bot ID or sendPayload is required');
 		this.options = options;
@@ -20,9 +40,20 @@ class TsumiInstance extends EventEmitter {
 		this.userAgent = options?.userAgent || 'Tsumi/0.0.1';
 		global.tsumi.botId = options.botId;
 	}
+
+	/**
+	 * Purge all nodes
+	 * @return {Boolean} True if successful
+	 */
 	purge = () => {
 		Nodes = {};
+		return true;
 	};
+
+	/**
+	 * Add a node to the instance
+	 * @param {Object} node The node to add
+	 */
 	addNode = (node) => {
 		if (!node.host || !node.port || !node.pass)
 			throw new Error('Host, port, and pass are required');
@@ -42,11 +73,20 @@ class TsumiInstance extends EventEmitter {
 			this.emit('nodeOpen', newNode);
 		});
 	};
+
+	/**
+	 * Get the ideal node
+	 * @return {Object} The ideal node
+	 */
 	getIdealNode = () => {
 		return Nodes[sortNodesBySystemLoad(Nodes)];
 	};
 }
 
+/**
+ * Handling raw events for players
+ * @param {Object} data The data to handle
+ */
 function handleRaw(data) {
 	switch (data.t) {
 		case 'VOICE_SERVER_UPDATE': {
@@ -97,6 +137,12 @@ function handleRaw(data) {
 	}
 }
 
+/**
+ * Handle finding values in an object
+ * @param {Object} obj The object to search
+ * @param {string} searchKey The key to search for
+ * @return {Object} The value of the key
+ */
 function findValue(obj, searchKey) {
 	for (let key in obj) {
 		if (obj[key].players && obj[key].players[searchKey]) {
@@ -106,6 +152,11 @@ function findValue(obj, searchKey) {
 	return null;
 }
 
+/**
+ * Sort nodes by system load
+ * @param {Object} nodes The nodes to sort
+ * @return {Object} Nodes sorted by system load
+ */
 function sortNodesBySystemLoad(nodes) {
 	let sortedNodes = Object.entries(nodes).sort(
 		(a, b) => a[1].stats.cpu.systemLoad - b[1].stats.cpu.systemLoad
