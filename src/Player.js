@@ -47,6 +47,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Function for handling events
+	 * @type {Function}
 	 * @param {Object} data The data to handle
 	 */
 	handleEvents = (data) => {
@@ -71,6 +72,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Start connection between LavaLink/NodeLink and Discord voice server
+	 * @type {Function}
 	 */
 	connect = async () => {
 		this.update({
@@ -84,6 +86,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Update player data
+	 * @type {Function}
 	 * @param {Object} data - The data to update
 	 * @return {Object} Request result
 	 */
@@ -103,6 +106,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Destroy this player on the server
+	 * @type {Function}
 	 * @return {Object} Request result
 	 */
 	destroy = async () => {
@@ -118,6 +122,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Get this player's information
+	 * @type {Function}
 	 * @return {Object} This player's information
 	 */
 	get = async () => {
@@ -134,7 +139,8 @@ class Player extends EventEmitter {
 	};
 
 	/**
-	 * Plays a track.
+	 * Plays a track
+	 * @type {Function}
 	 * @param {Object} data The data to play
 	 * @param {string} data.track The base64 encoded track to play
 	 * @param {Object} options The options for playing the track
@@ -159,6 +165,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Pause playing
+	 * @type {Function}
 	 * @return {Object} Request result
 	 */
 	pause = async () => {
@@ -169,6 +176,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Resume playing
+	 * @type {Function}
 	 * @return {Object} Request result
 	 */
 	resume = async () => {
@@ -179,6 +187,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Set volume
+	 * @type {Function}
 	 * @param {number} data The volume to set
 	 * @return {Object} Request result
 	 */
@@ -194,6 +203,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Set filter
+	 * @type {Function}
 	 * @param {Object} data The filter to set
 	 * @return {Object} This node instance
 	 */
@@ -205,6 +215,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Get volume
+	 * @type {Function}
 	 * @return {number} Volume
 	 */
 	getVolume = async () => {
@@ -214,6 +225,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Get filters
+	 * @type {Function}
 	 * @return {Object} Filters
 	 */
 	getFilters = async () => {
@@ -223,6 +235,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Seek track
+	 * @type {Function}
 	 * @param {number} int The position to seek to
 	 * @return {number} Request result
 	 */
@@ -235,6 +248,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Start listening on VC
+	 * @type {Function}
 	 * @return {Object} An event emitter for listening
 	 */
 	startListen = async () => {
@@ -291,6 +305,7 @@ class Player extends EventEmitter {
 
 	/**
 	 * Stop listening on VC
+	 * @type {Function}
 	 * @return {Boolean} Return true if stopped listening
 	 */
 	stopListen = async () => {

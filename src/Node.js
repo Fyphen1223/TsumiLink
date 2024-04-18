@@ -92,6 +92,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Start WS with LavaLink server
+	 * @type {Function}
 	 * @return {Object} This node instance
 	 */
 	startWs = () => {
@@ -127,6 +128,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Join voice channel
+	 * @type {Function}
 	 * @param {Object} options - Object that contains the options for the voice channel
 	 * @param {String} options.guildId - Guild ID
 	 * @param {String} options.channelId - Channel ID
@@ -162,6 +164,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Leave voice channel
+	 * @type {Function}
 	 * @param {String} guildId - Guild ID
 	 * @return {Object} This node instance
 	 */
@@ -184,6 +187,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Get players
+	 * @type {Function}
 	 * @return {Object} Players
 	 */
 	getPlayers = () => {
@@ -192,6 +196,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Get player on specified guild
+	 * @type {Function}
 	 * @return {Object} The player for the guild
 	 */
 	getPlayer = (guildId) => {
@@ -200,6 +205,7 @@ class Node extends EventEmitter {
 
 	/**
 	 * Load tracks
+	 * @type {Function}
 	 * @return {Object} Load results
 	 */
 	loadTracks = async (data) => {
