@@ -199,6 +199,7 @@ class Node extends EventEmitter {
 	/**
 	 * Get player on specified guild
 	 * @function
+	 * @param {String} guildId - Guild ID
 	 * @return {Object} - The player for the guild
 	 */
 	getPlayer = (guildId) => {
@@ -209,6 +210,7 @@ class Node extends EventEmitter {
 	 * Load tracks
 	 * @function
 	 * @async
+	 * @param {String} data - Data to load
 	 * @return {Object} - Load results
 	 */
 	loadTracks = async (data) => {

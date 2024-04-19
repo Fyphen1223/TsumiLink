@@ -30,18 +30,38 @@ var Nodes = {};
 class TsumiInstance extends EventEmitter {
 	/**
 	 * @param {Object} options
-	 * @param {string} options.botId The bot ID
-	 * @param {Function} options.sendPayload The function to send payloads
-	 * @param {string} options.userAgent The user agent to use
-	 * @return {Object} An event emitter for listening
+	 * @param {string} options.botId - The bot ID
+	 * @param {Function} options.sendPayload - The function to send payloads
+	 * @param {string} options.userAgent - The user agent to use
+	 * @return {Object} - An event emitter for listening
 	 */
 	constructor(options) {
 		super();
 		if (!options?.botId || !options?.sendPayload)
 			throw new Error('Bot ID or sendPayload is required');
+
+		/**
+		 * This Instance's option
+		 * @type {Object}
+		 */
 		this.options = options;
+
+		/**
+		 * This bot's ID
+		 * @type {String}
+		 */
 		this.botId = options.botId;
+
+		/**
+		 * This Instance's user agent
+		 * @type {String}
+		 */
 		this.userAgent = options?.userAgent || 'Tsumi/0.0.1';
+
+		/**
+		 * This Instance's bot ID
+		 * @type {String}
+		 */
 		global.tsumi.botId = options.botId;
 	}
 
@@ -59,6 +79,7 @@ class TsumiInstance extends EventEmitter {
 	 * Add a node to the instance
 	 * @function
 	 * @param {Object} node - The node to add
+	 * @return {Object} - The node that was added
 	 */
 	addNode = (node) => {
 		if (!node.host || !node.port || !node.pass)
@@ -78,6 +99,7 @@ class TsumiInstance extends EventEmitter {
 		newNode.on('open', () => {
 			this.emit('nodeOpen', newNode);
 		});
+		return newNode;
 	};
 
 	/**
