@@ -116,12 +116,8 @@ class Player extends EventEmitter {
 	 */
 	handlePlayerUpdate = (data) => {
 		console.log(data);
-		this.position = data.position;
-		this.track = data.track;
-		this.paused = data.paused;
-		this.volume = data.volume;
-		this.filters = data.filters;
 	};
+
 	/**
 	 * Start connection between LavaLink/NodeLink and Discord voice server
 	 * @function
