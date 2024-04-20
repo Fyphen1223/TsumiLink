@@ -67,6 +67,18 @@ client.on('raw', async (data) => {
 This is very important, please write this code. If there's no code like this above, the entire Tsumi won't work at all!
 */
 
+Tsumi.on('ready', () => {
+	console.log('Tsumi is ready');
+});
+
+Tsumi.on('error', (e) => {
+	console.log('Tsumi error');
+});
+
+/*
+These avobe should be called before adding node
+*/
+
 client.on('ready', async () => {
 	console.log('Ready');
 	const node = Tsumi.getIdealNode();

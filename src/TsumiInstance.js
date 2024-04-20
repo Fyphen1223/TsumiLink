@@ -95,8 +95,14 @@ class TsumiInstance extends EventEmitter {
 			sendPayload: this.options.sendPayload,
 		});
 		Nodes = { ...Nodes, [Object.keys(Nodes).length + 1]: newNode };
-		newNode.startWs();
-		this.emit('ready', newNode);
+		try {
+			newNode.startWs();
+			this.emit('nodeAdded', newNode);
+			if (Object.keys(Nodes).length === 1) this.emit('ready');
+		} catch (e) {
+			this.emit('error', e);
+			throw new Error(e);
+		}
 		return newNode;
 	};
 

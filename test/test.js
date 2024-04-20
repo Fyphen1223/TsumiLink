@@ -18,6 +18,14 @@ const Tsumi = new TsumiInstance({
 	userAgent: 'Tsumi/0.0.2',
 });
 
+Tsumi.on('ready', () => {
+	console.log('Tsumi is ready');
+});
+
+Tsumi.on('error', (e) => {
+	console.log('Tsumi error');
+});
+
 Tsumi.addNode({
 	serverName: 'Tsumi',
 	secure: false,
@@ -70,7 +78,6 @@ function wait(ms) {
 }
 
 client.on('ready', async () => {
-	console.log('Ready');
 	const node = Tsumi.getIdealNode();
 	await wait(1000);
 	const player = await node.joinVoiceChannel({
@@ -92,6 +99,7 @@ client.on('ready', async () => {
 		await player.seek(20000);
 	});
 });
+
 client.login(config.token);
 
 process.on('unhandledException', (err) => {
