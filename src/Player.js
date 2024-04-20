@@ -55,9 +55,11 @@ class Player extends EventEmitter {
 		switch (data.type) {
 			case 'TrackStartEvent':
 				this.emit('trackStart', data.track);
+				this.emit('start', data.track);
 				break;
 			case 'TrackEndEvent':
 				this.emit('trackEnd', data.track);
+				this.emit('end', data.track);
 				break;
 			case 'TrackExceptionEvent':
 				this.emit('trackException', data.track);
