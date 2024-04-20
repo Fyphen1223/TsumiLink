@@ -115,7 +115,10 @@ class Player extends EventEmitter {
 	 * @return {Object} - This player instance
 	 */
 	handlePlayerUpdate = (data) => {
-		console.log(data);
+		this.position = data.state.position;
+		this.lastUpdate = data.state.time;
+		this.connected = data.state.connected;
+		this.ping = data.state.ping;
 	};
 
 	/**

@@ -125,7 +125,7 @@ class Node extends EventEmitter {
 				this.stats = parsedData;
 			} else if (parsedData.op === 'playerUpdate') {
 				this.emit('playerUpdate', parsedData);
-				if (!parsedData?.guildId) return;
+				if (!parsedData?.guildId) console.log(parsedData);
 				this.players[parsedData.guildId].handlePlayerUpdate(parsedData);
 			}
 		});
