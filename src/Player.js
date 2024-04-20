@@ -44,6 +44,40 @@ class Player extends EventEmitter {
 		 * @type {Object}
 		 */
 		this.listeningWebSocket = null;
+
+		/**
+		 * The position of the track
+		 * @type {number}
+		 * @default 0
+		 */
+		this.position = 0;
+
+		/**
+		 * The track that is currently playing
+		 * @type {Object}
+		 */
+		this.track = null;
+
+		/**
+		 * Whether the player is paused
+		 * @type {boolean}
+		 * @default false
+		 */
+		this.paused = false;
+
+		/**
+		 * The volume of the player
+		 * @type {number}
+		 * @default 100
+		 */
+		this.volume = 100;
+
+		/**
+		 * The filters of the player
+		 * @type {Object}
+		 * @default {}
+		 */
+		this.filters = {};
 	}
 
 	/**
@@ -56,6 +90,7 @@ class Player extends EventEmitter {
 			case 'TrackStartEvent':
 				this.emit('trackStart', data.track);
 				this.emit('start', data.track);
+				this.track = data.track;
 				break;
 			case 'TrackEndEvent':
 				this.emit('trackEnd', data.track);
@@ -73,6 +108,20 @@ class Player extends EventEmitter {
 		}
 	};
 
+	/**
+	 * Function for handling player updates
+	 * @function
+	 * @param {Object} data - The data to handle
+	 * @return {Object} - This player instance
+	 */
+	handlePlayerUpdate = (data) => {
+		console.log(data);
+		this.position = data.position;
+		this.track = data.track;
+		this.paused = data.paused;
+		this.volume = data.volume;
+		this.filters = data.filters;
+	};
 	/**
 	 * Start connection between LavaLink/NodeLink and Discord voice server
 	 * @function
@@ -173,6 +222,7 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	pause = async () => {
+		this.paused = true;
 		return await this.update({
 			paused: true,
 		});
@@ -185,6 +235,7 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	resume = async () => {
+		this.paused = false;
 		return await this.update({
 			paused: false,
 		});
@@ -197,6 +248,7 @@ class Player extends EventEmitter {
 	 * @returns {Object} - Request result
 	 */
 	stop = async () => {
+		this.track = null;
 		return await this.update({
 			track: null,
 		});
@@ -213,6 +265,7 @@ class Player extends EventEmitter {
 		if (data >= 1000 || data < 0) {
 			throw new Error('Volume must be between 0 and 1000');
 		} else {
+			this.volume = data;
 			return await this.update({
 				volume: data,
 			});
@@ -227,6 +280,7 @@ class Player extends EventEmitter {
 	 * @return {Object} - This node instance
 	 */
 	setFilter = async (data) => {
+		this.filters = { ...this.filters, ...data };
 		return await this.update({
 			filters: data,
 		});
@@ -239,6 +293,7 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	clearFilter = async () => {
+		this.filters = {};
 		return await this.update({
 			filters: {},
 		});
@@ -274,6 +329,7 @@ class Player extends EventEmitter {
 	 * @return {number} - Request result
 	 */
 	seek = async (int) => {
+		this.position = int;
 		return await this.update({
 			position: int,
 		});
