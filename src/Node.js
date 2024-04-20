@@ -76,6 +76,9 @@ class Node extends EventEmitter {
 	 * @type {Object}
 	 */
 	stats = {
+		players: 0,
+		playingPlayers: 0,
+		uptime: 0,
 		memory: {
 			free: 0,
 			used: 0,
@@ -83,6 +86,7 @@ class Node extends EventEmitter {
 			reservable: 0,
 		},
 		cpu: { cores: 0, systemLoad: 0, lavalinkLoad: 0 },
+		frameStats: { sent: 0, nulled: 0, expected: 0, deficit: 0 },
 	};
 
 	/**
@@ -118,11 +122,13 @@ class Node extends EventEmitter {
 				this.players[parsedData.guildId].handleEvents(parsedData);
 			} else if (parsedData.op === 'stats') {
 				this.emit('stats', parsedData);
-				this.stats.memory = parsedData.memory;
-				this.stats.cpu = parsedData.cpu;
+				this.stats = parsedData;
 			} else if (parsedData.op === 'playerUpdate') {
 				this.emit('playerUpdate', parsedData);
 			}
+		});
+		this.ws.on('close', () => {
+			this.emit('close', this);
 		});
 		return this;
 	};
@@ -220,6 +226,92 @@ class Node extends EventEmitter {
 			},
 		});
 		return res.data;
+	};
+
+	/**
+	 * Load lyrics
+	 * @function
+	 * @async
+	 * @param {String} track - Track to load lyrics for
+	 * @param {String} lang - Language to load lyrics in
+	 * @return {Object} - Lyric
+	 */
+	loadLyrics = async (track, lang) => {
+		if (!track) throw new Error('No track provided.');
+		if (typeof track !== 'string') throw new Error('Track must be a string.');
+
+		if (lang && typeof lang != 'string') throw new Error('Lang must be a string.');
+
+		const res = await axios.get(
+			`${this.fetchUrl}/v4/loadlyrics?encodedTrack=${encodeURIComponent(track)}${
+				lang ? `&language=${lang}` : ''
+			}`,
+			{
+				headers: {
+					Authorization: this.pass,
+				},
+			}
+		);
+		return res.data;
+	};
+
+	/**
+	 * Get states
+	 * @function
+	 * @async
+	 * @return {Object} - States
+	 */
+	getStats = async () => {
+		const res = await axios.get(`${this.fetchUrl}/v4/stats`, {
+			headers: {
+				Authorization: this.pass,
+			},
+		});
+		this.stats = res.data;
+		return res.data;
+	};
+
+	/**
+	 * Decode a track
+	 * @function
+	 * @async
+	 * @param {String} track - Track to decode that is encoded to base64
+	 * @return {Object} - Decoded track
+	 */
+	decodeTrack = async (track) => {
+		const res = await axios.get(`${this.fetchUrl}/v4/decodetrack?encodedTrack=${track}`, {
+			headers: {
+				Authorization: this.pass,
+			},
+		});
+		return res.data;
+	};
+
+	/**
+	 * Decode multiple tracks
+	 * @function
+	 * @async
+	 * @param {Array} tracks - Array of tracks to decode that are encoded to base64
+	 * @return {Object} - Decoded tracks
+	 */
+	decodeTracks = async (tracks) => {
+		const res = await axios.post(`${this.fetchUrl}/v4/decodetracks`, tracks, {
+			headers: {
+				Authorization: this.pass,
+			},
+		});
+		return res.data;
+	};
+
+	/**
+	 * Destroy this node
+	 * @function
+	 * @return {Boolean} - True if successful
+	 */
+	destroy = () => {
+		this.ws.close();
+		this.emit('destroyed');
+		return true;
 	};
 }
 

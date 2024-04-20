@@ -149,17 +149,12 @@ class Player extends EventEmitter {
 	 * @async
 	 * @param {Object} data - The data to play
 	 * @param {string} data.track - The base64 encoded track to play
-	 * @param {Object} options - The options for playing the track
 	 * @return {Object} - Request result
 	 */
 	play = async (data) => {
 		const res = await axios.patch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
-			{
-				track: {
-					encoded: data.track,
-				},
-			},
+			data,
 			{
 				headers: {
 					Authorization: this.node.pass,
@@ -194,6 +189,18 @@ class Player extends EventEmitter {
 	};
 
 	/**
+	 * Stop playing
+	 * @function
+	 * @async
+	 * @returns {Object} - Request result
+	 */
+	stop = async () => {
+		return await this.update({
+			track: null,
+		});
+	};
+
+	/**
 	 * Set volume
 	 * @function
 	 * @async
@@ -220,6 +227,18 @@ class Player extends EventEmitter {
 	setFilter = async (data) => {
 		return await this.update({
 			filters: data,
+		});
+	};
+
+	/**
+	 * Clear filter
+	 * @function
+	 * @async
+	 * @return {Object} - Request result
+	 */
+	clearFilter = async () => {
+		return await this.update({
+			filters: {},
 		});
 	};
 
@@ -253,7 +272,6 @@ class Player extends EventEmitter {
 	 * @return {number} - Request result
 	 */
 	seek = async (int) => {
-		console.log(int);
 		return await this.update({
 			position: int,
 		});

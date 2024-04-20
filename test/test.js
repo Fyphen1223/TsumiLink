@@ -77,40 +77,23 @@ client.on('ready', async () => {
 		guildId: '919809544648020008',
 		channelId: '919809544648020012',
 	});
-	const data = await node.loadTracks('ytsearch:Alan Walker The Spectre');
+	const data = await node.loadTracks(
+		'https://open.spotify.com/intl-ja/track/2NaS4dB0JGsTYHaWa64KqE'
+	);
 	await player.play({
-		track: data.data[0].encoded,
+		track: {
+			encoded: data.data.encoded,
+		},
 	});
-	player.on('trackStart', async (data) => {
+	player.on('trackStart', async () => {
 		await wait(500);
-		const record = await player.startListen();
-		console.log('Start Speaking');
-		record.on('endSpeaking', (voice) => {
-			const base64Voice = voice.data;
-			const buffer = Buffer.from(base64Voice, 'base64');
-			let readable = new require('stream').Readable();
-			readable._read = () => {};
-			readable.push(buffer);
-			readable.push(null);
-			let transcoder = new prism.FFmpeg({
-				args: [
-					'-analyzeduration',
-					'0',
-					'-loglevel',
-					'0',
-					'-f',
-					's16le',
-					'-ar',
-					'48000',
-					'-ac',
-					'2',
-				],
-			});
-			const s16le = readable.pipe(transcoder);
-			const opus = s16le.pipe(
-				new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 })
-			);
-		});
+		await player.seek(10000);
+		await wait(5000);
+		await player.seek(20000);
 	});
 });
 client.login(config.token);
+
+process.on('unhandledException', (err) => {
+	console.error(err.stack);
+});

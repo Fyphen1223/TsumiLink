@@ -5,11 +5,12 @@ Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.
 NOT WELL-DOCUMENTED, BE CAREFUL WHEN YOU USE THIS CLIENT. YOU MIGHT NEED TO LOOK THE CODE TO REALIZE WHAT THE CODE IS DOING.
 
 # How to install
+
 ```
 npm install tsumi
 ```
 
-or 
+or
 
 ```
 npm install https://github.com/Fyphen1223/TsumiLink
@@ -17,7 +18,7 @@ npm install https://github.com/Fyphen1223/TsumiLink
 
 # Docs
 
-See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation. 
+See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation.
 
 # Example
 
@@ -77,7 +78,9 @@ client.on('ready', async () => {
 	});
 	const data = await node.loadTracks('ytsearch:Alan Walker The Spectre');
 	await player.play({
-		track: data.data[0].encoded,
+		track: {
+			encoded: data.data[0].encoded,
+		}
 	});
 	player.on('trackStart', async (data) => {
 		await wait(2000);
