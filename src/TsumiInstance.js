@@ -99,6 +99,7 @@ class TsumiInstance extends EventEmitter {
 		newNode.on('open', () => {
 			this.emit('nodeOpen', newNode);
 		});
+		this.emit('ready', newNode);
 		return newNode;
 	};
 
