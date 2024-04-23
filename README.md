@@ -1,6 +1,9 @@
 # TsumiLink
 
-![TsumiLink](https://github.com/Fyphen1223/TsumiLink/assets/89511960/c83a406f-8f7d-4868-ab05-0efaece58620)
+<p align="center">
+  <img src="https://github.com/Fyphen1223/TsumiLink/assets/89511960/c83a406f-8f7d-4868-ab05-0efaece58620" width="500px" height="500px" />
+</p>
+
 
 Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.
 
