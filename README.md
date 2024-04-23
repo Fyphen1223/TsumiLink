@@ -102,6 +102,8 @@ client.on('ready', async () => {
 			encoded: data.data[0].encoded,
 		}
 	});
+
+	//Also 'start' event is available
 	player.on('trackStart', async (data) => {
 		await wait(2000);
 		await player.pause();
