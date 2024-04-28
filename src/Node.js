@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
 const { EventEmitter } = require('node:events');
 const { Player } = require('./Player');
-const axios = require('axios');
 
 /**
  * Represents a Player that connects to a node and interacts with a guild's session.
@@ -221,12 +220,12 @@ class Node extends EventEmitter {
 	 * @return {Object} - Load results
 	 */
 	loadTracks = async (data) => {
-		const res = await axios.get(`${this.fetchUrl}/v4/loadtracks?identifier=${data}`, {
+		const res = await globalThis.fetch(`${this.fetchUrl}/v4/loadtracks?identifier=${data}`, {
 			headers: {
 				Authorization: this.pass,
 			},
 		});
-		return res.data;
+		return await res.json();
 	};
 
 	/**
@@ -243,7 +242,7 @@ class Node extends EventEmitter {
 
 		if (lang && typeof lang != 'string') throw new Error('Lang must be a string.');
 
-		const res = await axios.get(
+		const res = await globalThis.fetch(
 			`${this.fetchUrl}/v4/loadlyrics?encodedTrack=${encodeURIComponent(track)}${
 				lang ? `&language=${lang}` : ''
 			}`,
@@ -253,7 +252,7 @@ class Node extends EventEmitter {
 				},
 			}
 		);
-		return res.data;
+		return await res.json();
 	};
 
 	/**
@@ -263,13 +262,14 @@ class Node extends EventEmitter {
 	 * @return {Object} - States
 	 */
 	getStats = async () => {
-		const res = await axios.get(`${this.fetchUrl}/v4/stats`, {
+		const res = await globalThis.fetch(`${this.fetchUrl}/v4/stats`, {
 			headers: {
 				Authorization: this.pass,
 			},
 		});
-		this.stats = res.data;
-		return res.data;
+		const data = await res.json();
+		this.stats = data;
+		return data;
 	};
 
 	/**
@@ -280,12 +280,15 @@ class Node extends EventEmitter {
 	 * @return {Object} - Decoded track
 	 */
 	decodeTrack = async (track) => {
-		const res = await axios.get(`${this.fetchUrl}/v4/decodetrack?encodedTrack=${track}`, {
-			headers: {
-				Authorization: this.pass,
-			},
-		});
-		return res.data;
+		const res = await globalThis.fetch(
+			`${this.fetchUrl}/v4/decodetrack?encodedTrack=${track}`,
+			{
+				headers: {
+					Authorization: this.pass,
+				},
+			}
+		);
+		return await res.json();
 	};
 
 	/**
@@ -296,12 +299,12 @@ class Node extends EventEmitter {
 	 * @return {Object} - Decoded tracks
 	 */
 	decodeTracks = async (tracks) => {
-		const res = await axios.post(`${this.fetchUrl}/v4/decodetracks`, tracks, {
+		const res = globalThis.fetch(`${this.fetchUrl}/v4/decodetracks`, tracks, {
 			headers: {
 				Authorization: this.pass,
 			},
 		});
-		return res.data;
+		return await res.json();
 	};
 
 	/**

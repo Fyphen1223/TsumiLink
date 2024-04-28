@@ -1,4 +1,4 @@
-const { TsumiInstance, handleRaw } = require('../src/TsumiInstance');
+const { TsumiInstance } = require('../src/TsumiInstance');
 const { Node } = require('../src/Node');
 
 const fs = require('fs');
@@ -70,7 +70,7 @@ const client = new discord.Client({
 });
 
 client.on('raw', async (data) => {
-	handleRaw(data);
+	Tsumi.handleRaw(data);
 });
 
 function wait(ms) {
@@ -94,9 +94,7 @@ client.on('ready', async () => {
 	});
 	player.on('trackStart', async () => {
 		await wait(500);
-		await player.seek(10000);
-		await wait(5000);
-		await player.seek(20000);
+		console.log(await player.get());
 	});
 });
 

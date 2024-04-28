@@ -1,4 +1,3 @@
-const axios = require('axios');
 const { EventEmitter } = require('events');
 const { WebSocket } = require('ws');
 
@@ -141,20 +140,25 @@ class Player extends EventEmitter {
 	 * @function
 	 * @async
 	 * @param {Object} data - The data to update
+	 * @param {boolean} noReplace - Whether to replace the data
 	 * @return {Object} - Request result
 	 */
-	update = async (data) => {
+	update = async (data, noReplace) => {
 		if (!this.node.sessionId) throw new Error('Node is not ready');
-		const res = await axios.patch(
-			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
-			data,
+		const res = await globalThis.fetch(
+			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${
+				this.guildId
+			}?noReplace=${!noReplace ? true : noReplace}`,
 			{
+				method: 'PATCH',
 				headers: {
 					Authorization: this.node.pass,
+					'Content-Type': 'application/json',
 				},
+				body: JSON.stringify(data),
 			}
 		);
-		return res.data;
+		return await res.json();
 	};
 
 	/**
@@ -164,14 +168,16 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	destroy = async () => {
-		return await axios.delete(
+		const res = await globalThis.fetch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
 			{
+				method: 'DELETE',
 				headers: {
 					Authorization: this.node.pass,
 				},
 			}
 		);
+		return await res.json();
 	};
 
 	/**
@@ -182,7 +188,7 @@ class Player extends EventEmitter {
 	 */
 	get = async () => {
 		if (!this.node.sessionId) throw new Error('Node is not ready');
-		const res = await axios.get(
+		const res = await globalThis.fetch(
 			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}`,
 			{
 				headers: {
@@ -190,7 +196,7 @@ class Player extends EventEmitter {
 				},
 			}
 		);
-		return res.data;
+		return await res.json();
 	};
 
 	/**
@@ -202,16 +208,7 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	play = async (data) => {
-		const res = await axios.patch(
-			`${this.node.fetchUrl}/v4/sessions/${this.node.sessionId}/players/${this.guildId}?noReplace=true`,
-			data,
-			{
-				headers: {
-					Authorization: this.node.pass,
-				},
-			}
-		);
-		return res.data;
+		return await this.update(data);
 	};
 
 	/**

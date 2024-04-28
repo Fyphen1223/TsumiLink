@@ -114,61 +114,61 @@ class TsumiInstance extends EventEmitter {
 	getIdealNode = () => {
 		return Nodes[sortNodesBySystemLoad(Nodes)];
 	};
-}
 
-/**
- * Handling raw events for players
- * @function
- * @param {Object} data - The data to handle
- */
-function handleRaw(data) {
-	switch (data.t) {
-		case 'VOICE_SERVER_UPDATE': {
-			if (!global.tsumi.vcsData[data.d.guild_id]) return;
-			global.tsumi.vcsData[data.d.guild_id] = {
-				...global.tsumi.vcsData[data.d.guild_id],
-				token: data.d.token,
-				endpoint: data.d.endpoint,
-			};
-			if (
-				global.tsumi.vcsData[data.d.guild_id].sessionId &&
-				global.tsumi.vcsData[data.d.guild_id].token
-			) {
-				const player = findValue(Nodes, data.d.guild_id);
-				player.connectionInfo = {
-					token: global.tsumi.vcsData[data.d.guild_id].token,
-					endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-					sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+	/**
+	 * Handling raw events for players
+	 * @function
+	 * @param {Object} data - The data to handle
+	 */
+	handleRaw = (data) => {
+		switch (data.t) {
+			case 'VOICE_SERVER_UPDATE': {
+				if (!global.tsumi.vcsData[data.d.guild_id]) return;
+				global.tsumi.vcsData[data.d.guild_id] = {
+					...global.tsumi.vcsData[data.d.guild_id],
+					token: data.d.token,
+					endpoint: data.d.endpoint,
 				};
-				player.connect();
-				delete global.tsumi.vcsData[data.d.guild_id];
+				if (
+					global.tsumi.vcsData[data.d.guild_id].sessionId &&
+					global.tsumi.vcsData[data.d.guild_id].token
+				) {
+					const player = findValue(Nodes, data.d.guild_id);
+					player.connectionInfo = {
+						token: global.tsumi.vcsData[data.d.guild_id].token,
+						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
+						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+					};
+					player.connect();
+					delete global.tsumi.vcsData[data.d.guild_id];
+				}
+				break;
 			}
-			break;
-		}
-		case 'VOICE_STATE_UPDATE': {
-			if (data.d.member.user.id !== global.tsumi.botId) return;
-			if (data.d.channel_id === null) return delete global.tsumi.vcsData[data.d.guild_id];
-			if (data.d.session_id === global.tsumi.vcsData[data.d.guild_id]?.sessionId) return;
-			global.tsumi.vcsData[data.d.guild_id] = {
-				...global.tsumi.vcsData[data.d.guild_id],
-				sessionId: data.d.session_id,
-			};
-			if (
-				global.tsumi.vcsData[data.d.guild_id].sessionId &&
-				global.tsumi.vcsData[data.d.guild_id].token
-			) {
-				const player = findValue(Nodes, data.d.guild_id);
-				player.connectionInfo = {
-					token: global.tsumi.vcsData[data.d.guild_id].token,
-					endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-					sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+			case 'VOICE_STATE_UPDATE': {
+				if (data.d.member.user.id !== global.tsumi.botId) return;
+				if (data.d.channel_id === null) return delete global.tsumi.vcsData[data.d.guild_id];
+				if (data.d.session_id === global.tsumi.vcsData[data.d.guild_id]?.sessionId) return;
+				global.tsumi.vcsData[data.d.guild_id] = {
+					...global.tsumi.vcsData[data.d.guild_id],
+					sessionId: data.d.session_id,
 				};
-				player.connect();
-				delete global.tsumi.vcsData[data.d.guild_id];
+				if (
+					global.tsumi.vcsData[data.d.guild_id].sessionId &&
+					global.tsumi.vcsData[data.d.guild_id].token
+				) {
+					const player = findValue(Nodes, data.d.guild_id);
+					player.connectionInfo = {
+						token: global.tsumi.vcsData[data.d.guild_id].token,
+						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
+						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+					};
+					player.connect();
+					delete global.tsumi.vcsData[data.d.guild_id];
+				}
+				break;
 			}
-			break;
 		}
-	}
+	};
 }
 
 /**
@@ -200,4 +200,4 @@ function sortNodesBySystemLoad(nodes) {
 	return sortedNodes.map((node) => node[0]);
 }
 
-module.exports = { TsumiInstance, handleRaw };
+module.exports = { TsumiInstance };
