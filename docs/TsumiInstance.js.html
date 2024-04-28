@@ -123,10 +123,14 @@ class TsumiInstance extends EventEmitter {
 			sendPayload: this.options.sendPayload,
 		});
 		Nodes = { ...Nodes, [Object.keys(Nodes).length + 1]: newNode };
-		newNode.startWs();
-		newNode.on('open', () => {
-			this.emit('nodeOpen', newNode);
-		});
+		try {
+			newNode.startWs();
+			this.emit('nodeAdded', newNode);
+			if (Object.keys(Nodes).length === 1) this.emit('ready');
+		} catch (e) {
+			this.emit('error', e);
+			throw new Error(e);
+		}
 		return newNode;
 	};
 
@@ -138,61 +142,61 @@ class TsumiInstance extends EventEmitter {
 	getIdealNode = () => {
 		return Nodes[sortNodesBySystemLoad(Nodes)];
 	};
-}
 
-/**
- * Handling raw events for players
- * @function
- * @param {Object} data - The data to handle
- */
-function handleRaw(data) {
-	switch (data.t) {
-		case 'VOICE_SERVER_UPDATE': {
-			if (!global.tsumi.vcsData[data.d.guild_id]) return;
-			global.tsumi.vcsData[data.d.guild_id] = {
-				...global.tsumi.vcsData[data.d.guild_id],
-				token: data.d.token,
-				endpoint: data.d.endpoint,
-			};
-			if (
-				global.tsumi.vcsData[data.d.guild_id].sessionId &amp;&amp;
-				global.tsumi.vcsData[data.d.guild_id].token
-			) {
-				const player = findValue(Nodes, data.d.guild_id);
-				player.connectionInfo = {
-					token: global.tsumi.vcsData[data.d.guild_id].token,
-					endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-					sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+	/**
+	 * Handling raw events for players
+	 * @function
+	 * @param {Object} data - The data to handle
+	 */
+	handleRaw = (data) => {
+		switch (data.t) {
+			case 'VOICE_SERVER_UPDATE': {
+				if (!global.tsumi.vcsData[data.d.guild_id]) return;
+				global.tsumi.vcsData[data.d.guild_id] = {
+					...global.tsumi.vcsData[data.d.guild_id],
+					token: data.d.token,
+					endpoint: data.d.endpoint,
 				};
-				player.connect();
-				delete global.tsumi.vcsData[data.d.guild_id];
+				if (
+					global.tsumi.vcsData[data.d.guild_id].sessionId &amp;&amp;
+					global.tsumi.vcsData[data.d.guild_id].token
+				) {
+					const player = findValue(Nodes, data.d.guild_id);
+					player.connectionInfo = {
+						token: global.tsumi.vcsData[data.d.guild_id].token,
+						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
+						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+					};
+					player.connect();
+					delete global.tsumi.vcsData[data.d.guild_id];
+				}
+				break;
 			}
-			break;
-		}
-		case 'VOICE_STATE_UPDATE': {
-			if (data.d.member.user.id !== global.tsumi.botId) return;
-			if (data.d.channel_id === null) return delete global.tsumi.vcsData[data.d.guild_id];
-			if (data.d.session_id === global.tsumi.vcsData[data.d.guild_id]?.sessionId) return;
-			global.tsumi.vcsData[data.d.guild_id] = {
-				...global.tsumi.vcsData[data.d.guild_id],
-				sessionId: data.d.session_id,
-			};
-			if (
-				global.tsumi.vcsData[data.d.guild_id].sessionId &amp;&amp;
-				global.tsumi.vcsData[data.d.guild_id].token
-			) {
-				const player = findValue(Nodes, data.d.guild_id);
-				player.connectionInfo = {
-					token: global.tsumi.vcsData[data.d.guild_id].token,
-					endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-					sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+			case 'VOICE_STATE_UPDATE': {
+				if (data.d.member.user.id !== global.tsumi.botId) return;
+				if (data.d.channel_id === null) return delete global.tsumi.vcsData[data.d.guild_id];
+				if (data.d.session_id === global.tsumi.vcsData[data.d.guild_id]?.sessionId) return;
+				global.tsumi.vcsData[data.d.guild_id] = {
+					...global.tsumi.vcsData[data.d.guild_id],
+					sessionId: data.d.session_id,
 				};
-				player.connect();
-				delete global.tsumi.vcsData[data.d.guild_id];
+				if (
+					global.tsumi.vcsData[data.d.guild_id].sessionId &amp;&amp;
+					global.tsumi.vcsData[data.d.guild_id].token
+				) {
+					const player = findValue(Nodes, data.d.guild_id);
+					player.connectionInfo = {
+						token: global.tsumi.vcsData[data.d.guild_id].token,
+						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
+						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
+					};
+					player.connect();
+					delete global.tsumi.vcsData[data.d.guild_id];
+				}
+				break;
 			}
-			break;
 		}
-	}
+	};
 }
 
 /**
@@ -224,7 +228,7 @@ function sortNodesBySystemLoad(nodes) {
 	return sortedNodes.map((node) => node[0]);
 }
 
-module.exports = { TsumiInstance, handleRaw };
+module.exports = { TsumiInstance };
 </code></pre>
         </article>
     </section>
@@ -235,13 +239,13 @@ module.exports = { TsumiInstance, handleRaw };
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Node.html">Node</a></li><li><a href="Player.html">Player</a></li><li><a href="TsumiInstance.html">TsumiInstance</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Nodes">Nodes</a></li><li><a href="global.html#findValue">findValue</a></li><li><a href="global.html#handleRaw">handleRaw</a></li><li><a href="global.html#sortNodesBySystemLoad">sortNodesBySystemLoad</a></li><li><a href="global.html#tsumi">tsumi</a></li><li><a href="global.html#vcsData">vcsData</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Node.html">Node</a></li><li><a href="Player.html">Player</a></li><li><a href="TsumiInstance.html">TsumiInstance</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Nodes">Nodes</a></li><li><a href="global.html#findValue">findValue</a></li><li><a href="global.html#sortNodesBySystemLoad">sortNodesBySystemLoad</a></li><li><a href="global.html#tsumi">tsumi</a></li><li><a href="global.html#vcsData">vcsData</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 20 2024 17:09:19 GMT+0900 (日本標準時)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 28 2024 20:31:23 GMT+0900 (日本標準時)
 </footer>
 
 <script> prettyPrint(); </script>
