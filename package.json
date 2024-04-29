@@ -1,6 +1,6 @@
 {
 	"name": "tsumi",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"description": "Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.",
 	"main": "index.js",
 	"scripts": {
