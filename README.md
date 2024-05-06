@@ -33,7 +33,7 @@ See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation
 ```js
 const discord = require('discord.js');
 
-const { TsumiInstance, handleRaw } = require('tsumi');
+const { TsumiInstance } = require('tsumi');
 
 const Tsumi = new TsumiInstance({
 	botId: 'Your bot ID goes here',
