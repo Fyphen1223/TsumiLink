@@ -18,6 +18,8 @@ For help, you should go to this [Discord Channel](https://discord.gg/wvKAHxgdVb)
 npm install tsumi
 ```
 
+
+I STRONGLY RECOMMEND INSTALLING GITHUB REPO DIRECTLY SINCE NPM PACKAGE IS NOT UP-TO-DATE
 or, if you prefer the latest feature, please directly install it with
 
 ```
