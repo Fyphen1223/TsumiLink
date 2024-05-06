@@ -81,7 +81,8 @@ const client = new discord.Client({
 });
 
 client.on('raw', async (data) => {
-	handleRaw(data);
+	// since v0.0.17 on npm, global "handleRaw" function is no longer provided. Use TsumiInstance.handleRaw instead.
+	Tsumi.handleRaw(data);
 });
 /*
 This is very important, please write this code. If there's no code like this above, the entire Tsumi won't work at all!
