@@ -196,7 +196,11 @@ class Player extends EventEmitter {
 				},
 			}
 		);
-		return await res.json();
+		const result = await res.json();
+		this.position = result.state.position;
+		this.ping = result.state.ping;
+		this.connected = result.state.connected;
+		return result;
 	};
 
 	/**
