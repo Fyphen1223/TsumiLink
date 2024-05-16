@@ -113,7 +113,7 @@ class TsumiInstance extends EventEmitter {
 			}
 			case 'VOICE_STATE_UPDATE': {
 				const player = findValue(Nodes, data.d.guild_id);
-				if (data.d.member.user.id !== global.tsumi.botId) return;
+				if (data.d.member.user.id !== player.node.TsumiInstance.botId) return;
 				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				if (data.d.session_id === player.connectionInfo?.sessionId) return;
 				player.connectionInfo.sessionId = data.d.session_id;
