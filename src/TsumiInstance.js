@@ -2,23 +2,8 @@ const { EventEmitter } = require('events');
 const { Node } = require('./Node');
 
 /**
- * Tsumi global variables
- * @type {Object}
- * @global
- */
-global.tsumi = {};
-
-/**
- * Tsumi global VC data
- * @type {Object}
- * @global
- */
-global.tsumi.vcsData = {};
-
-/**
  * Nodes
  * @type {Object}
- * @global
  */
 var Nodes = {};
 
