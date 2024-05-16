@@ -123,47 +123,23 @@ class TsumiInstance extends EventEmitter {
 	handleRaw = (data) => {
 		switch (data.t) {
 			case 'VOICE_SERVER_UPDATE': {
-				if (!global.tsumi.vcsData[data.d.guild_id]) return;
-				global.tsumi.vcsData[data.d.guild_id] = {
-					...global.tsumi.vcsData[data.d.guild_id],
-					token: data.d.token,
-					endpoint: data.d.endpoint,
-				};
-				if (
-					global.tsumi.vcsData[data.d.guild_id].sessionId &&
-					global.tsumi.vcsData[data.d.guild_id].token
-				) {
-					const player = findValue(Nodes, data.d.guild_id);
-					player.connectionInfo = {
-						token: global.tsumi.vcsData[data.d.guild_id].token,
-						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
-					};
+				const player = findValue(Nodes, data.d.guild_id);
+				if (!player?.connectionInfo) return;
+				player.connectionInfo.token = data.d.token;
+				player.connectionInfo.endpoint = data.d.endpoint;
+				if (player.connectionInfo.sessionId && player.connectionInfo.token) {
 					player.connect();
-					delete global.tsumi.vcsData[data.d.guild_id];
 				}
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
+				const player = findValue(Nodes, data.d.guild_id);
 				if (data.d.member.user.id !== global.tsumi.botId) return;
-				if (data.d.channel_id === null) return delete global.tsumi.vcsData[data.d.guild_id];
-				if (data.d.session_id === global.tsumi.vcsData[data.d.guild_id]?.sessionId) return;
-				global.tsumi.vcsData[data.d.guild_id] = {
-					...global.tsumi.vcsData[data.d.guild_id],
-					sessionId: data.d.session_id,
-				};
-				if (
-					global.tsumi.vcsData[data.d.guild_id].sessionId &&
-					global.tsumi.vcsData[data.d.guild_id].token
-				) {
-					const player = findValue(Nodes, data.d.guild_id);
-					player.connectionInfo = {
-						token: global.tsumi.vcsData[data.d.guild_id].token,
-						endpoint: global.tsumi.vcsData[data.d.guild_id].endpoint,
-						sessionId: global.tsumi.vcsData[data.d.guild_id].sessionId,
-					};
+				if (data.d.channel_id === null) return (player.connectionInfo = {});
+				if (data.d.session_id === player.connectionInfo?.sessionId) return;
+				player.connectionInfo.sessionId = data.d.session_id;
+				if (player.connectionInfo.sessionId && player.connectionInfo.token) {
 					player.connect();
-					delete global.tsumi.vcsData[data.d.guild_id];
 				}
 				break;
 			}

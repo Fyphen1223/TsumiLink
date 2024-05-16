@@ -3,9 +3,6 @@ const { Node } = require('../src/Node');
 
 const fs = require('fs');
 
-const ffmpeg = require('fluent-ffmpeg');
-const prism = require('prism-media');
-
 const discord = require('discord.js');
 
 const config = require('./config.json');

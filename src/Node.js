@@ -148,11 +148,6 @@ class Node extends EventEmitter {
 			throw new Error(
 				'Node is not ready, please wait for it to receive session ID to work properly.'
 			);
-		global.tsumi.vcsData[options.guildId] = {
-			token: null,
-			endpoint: null,
-			sessionId: null,
-		};
 		await this.sendPayload(options.guildId, {
 			op: 4,
 			d: {
