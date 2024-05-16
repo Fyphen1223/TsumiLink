@@ -28,7 +28,6 @@ npm install https://github.com/Fyphen1223/TsumiLink
 
 # Docs
 
-PLEASE NOTE THAT globalThis.tsumi will be used for this lib.
 See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation.
 
 # Example
