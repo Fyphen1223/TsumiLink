@@ -41,13 +41,7 @@ class TsumiInstance extends EventEmitter {
 		 * This Instance's user agent
 		 * @type {String}
 		 */
-		this.userAgent = options?.userAgent || 'Tsumi/0.0.1';
-
-		/**
-		 * This Instance's bot ID
-		 * @type {String}
-		 */
-		global.tsumi.botId = options.botId;
+		this.userAgent = options?.userAgent || 'Tsumi/0.0.18';
 	}
 
 	/**
