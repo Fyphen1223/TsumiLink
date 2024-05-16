@@ -28,6 +28,7 @@ npm install https://github.com/Fyphen1223/TsumiLink
 
 # Docs
 
+PLEASE NOTE THAT globalThis.tsumi will be used for this lib.
 See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation.
 
 # Example
@@ -37,6 +38,7 @@ const discord = require('discord.js');
 
 const { TsumiInstance } = require('tsumi');
 
+//You shuoldn't name TsumiInstance "tsumi". It will override core stuffs of TsumiLink.
 const Tsumi = new TsumiInstance({
 	botId: 'Your bot ID goes here',
 	sendPayload: (guildId, payload) => {
