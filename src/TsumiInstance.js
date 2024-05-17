@@ -74,15 +74,13 @@ class TsumiInstance extends EventEmitter {
 			botId: this.botId,
 			sendPayload: this.options.sendPayload,
 		});
-		try {
-			newNode.startWs();
-			this.emit('nodeAdded', newNode);
-			if (Object.keys(this.Nodes).length === 1) this.emit('ready');
-		} catch (e) {
-			this.emit('error', e);
+		if (!newNode.startWs()) {
+			this.emit('error', newNode);
 			this.emit('unreachableNode', newNode);
 			throw new Error('Node is unreachable');
 		}
+		this.emit('nodeAdded', newNode);
+		if (Object.keys(this.Nodes).length === 1) this.emit('ready');
 		this.Nodes = { ...this.Nodes, [Object.keys(this.Nodes).length + 1]: newNode };
 		return newNode;
 	};

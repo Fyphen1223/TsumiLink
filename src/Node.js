@@ -109,7 +109,7 @@ class Node extends EventEmitter {
 				},
 			});
 		} catch (e) {
-			throw new Error('Failed to connect to the node.');
+			return false;
 		}
 		this.ws.on('message', (data) => {
 			const parsedData = JSON.parse(data.toString());
