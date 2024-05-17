@@ -2,12 +2,6 @@ const { EventEmitter } = require('events');
 const { Node } = require('./Node');
 
 /**
- * Nodes
- * @type {Object}
- */
-var Nodes = {};
-
-/**
  * Represents a Tsumi instance.
  * @extends EventEmitter
  * @class
@@ -42,6 +36,13 @@ class TsumiInstance extends EventEmitter {
 		 * @type {String}
 		 */
 		this.userAgent = options?.userAgent || 'Tsumi/0.0.18';
+
+		/**
+		 * The nodes that are connected
+		 * @type {Object}
+		 * @default {}
+		 */
+		this.Nodes = {};
 	}
 
 	/**
@@ -50,7 +51,7 @@ class TsumiInstance extends EventEmitter {
 	 * @return {Boolean} - True if successful
 	 */
 	purge = () => {
-		Nodes = {};
+		this.Nodes = {};
 		return true;
 	};
 
@@ -73,15 +74,16 @@ class TsumiInstance extends EventEmitter {
 			botId: this.botId,
 			sendPayload: this.options.sendPayload,
 		});
-		Nodes = { ...Nodes, [Object.keys(Nodes).length + 1]: newNode };
 		try {
 			newNode.startWs();
 			this.emit('nodeAdded', newNode);
-			if (Object.keys(Nodes).length === 1) this.emit('ready');
+			if (Object.keys(this.Nodes).length === 1) this.emit('ready');
 		} catch (e) {
 			this.emit('error', e);
+			this.emit('unreachableNode', newNode);
 			throw new Error(e);
 		}
+		this.Nodes = { ...this.Nodes, [Object.keys(this.Nodes).length + 1]: newNode };
 		return newNode;
 	};
 
@@ -91,7 +93,7 @@ class TsumiInstance extends EventEmitter {
 	 * @return {Object} The ideal node
 	 */
 	getIdealNode = () => {
-		return Nodes[sortNodesBySystemLoad(Nodes)];
+		return this.Nodes[sortNodesBySystemLoad(this.Nodes)];
 	};
 
 	/**
@@ -102,7 +104,7 @@ class TsumiInstance extends EventEmitter {
 	handleRaw = (data) => {
 		switch (data.t) {
 			case 'VOICE_SERVER_UPDATE': {
-				const player = findValue(Nodes, data.d.guild_id);
+				const player = findValue(this.Nodes, data.d.guild_id);
 				if (!player?.connectionInfo) return;
 				player.connectionInfo.token = data.d.token;
 				player.connectionInfo.endpoint = data.d.endpoint;
@@ -112,7 +114,7 @@ class TsumiInstance extends EventEmitter {
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
-				const player = findValue(Nodes, data.d.guild_id);
+				const player = findValue(this.Nodes, data.d.guild_id);
 				if (data.d.member.user.id !== player.node.botId) return;
 				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				if (data.d.session_id === player.connectionInfo?.sessionId) return;
