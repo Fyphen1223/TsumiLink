@@ -81,7 +81,6 @@ class TsumiInstance extends EventEmitter {
 		} catch (e) {
 			this.emit('error', e);
 			this.emit('unreachableNode', newNode);
-			throw new Error(e);
 		}
 		this.Nodes = { ...this.Nodes, [Object.keys(this.Nodes).length + 1]: newNode };
 		return newNode;
