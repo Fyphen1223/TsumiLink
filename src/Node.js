@@ -100,13 +100,17 @@ class Node extends EventEmitter {
 	 * @return {Object} - This node instance
 	 */
 	startWs = () => {
-		this.ws = new WebSocket(`${this.url}/v4/websocket`, {
-			headers: {
-				Authorization: this.pass,
-				'User-Id': this.botId,
-				'Client-name': this.userAgent,
-			},
-		});
+		try {
+			this.ws = new WebSocket(`${this.url}/v4/websocket`, {
+				headers: {
+					Authorization: this.pass,
+					'User-Id': this.botId,
+					'Client-name': this.userAgent,
+				},
+			});
+		} catch (e) {
+			throw new Error('Failed to connect to the node.');
+		}
 		this.ws.on('message', (data) => {
 			const parsedData = JSON.parse(data.toString());
 			if (parsedData.op === 'ready') {
