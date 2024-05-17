@@ -100,17 +100,13 @@ class Node extends EventEmitter {
 	 * @return {Object} - This node instance
 	 */
 	startWs = () => {
-		try {
-			this.ws = new WebSocket(`${this.url}/v4/websocket`, {
-				headers: {
-					Authorization: this.pass,
-					'User-Id': this.botId,
-					'Client-name': this.userAgent,
-				},
-			});
-		} catch (e) {
-			return false;
-		}
+		this.ws = new WebSocket(`${this.url}/v4/websocket`, {
+			headers: {
+				Authorization: this.pass,
+				'User-Id': this.botId,
+				'Client-name': this.userAgent,
+			},
+		});
 		this.ws.on('message', (data) => {
 			const parsedData = JSON.parse(data.toString());
 			if (parsedData.op === 'ready') {
