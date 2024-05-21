@@ -130,7 +130,15 @@ class TsumiInstance extends EventEmitter {
  * @param {string} searchKey - The key to search for
  * @return {Object} - The value of the key
  */
+/**
+ * Handle finding values in an object
+ * @function
+ * @param {Object} obj - The object to search
+ * @param {string} searchKey - The key to search for
+ * @return {Object} - The value of the key
+ */
 function findValue(obj, searchKey) {
+	console.log(obj);
 	for (let key in obj) {
 		if (obj[key].players && obj[key].players[searchKey]) {
 			return obj[key].players[searchKey];
