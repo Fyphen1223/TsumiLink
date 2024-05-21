@@ -99,7 +99,12 @@ class Node extends EventEmitter {
 	 * @function
 	 * @return {Object} - This node instance
 	 */
-	startWs = () => {
+	startWs = async () => {
+		try {
+			await globalThis.fetch(`${this.fetchUrl}/`);
+		} catch (_) {
+			return false;
+		}
 		this.ws = new WebSocket(`${this.url}/v4/websocket`, {
 			headers: {
 				Authorization: this.pass,

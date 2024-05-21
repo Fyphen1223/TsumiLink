@@ -58,10 +58,11 @@ class TsumiInstance extends EventEmitter {
 	/**
 	 * Add a node to the instance
 	 * @function
+	 * @async
 	 * @param {Object} node - The node to add
 	 * @return {Object} - The node that was added
 	 */
-	addNode = (node) => {
+	addNode = async (node) => {
 		if (!node.host || !node.port || !node.pass)
 			throw new Error('Host, port, and pass are required');
 		const newNode = new Node({
@@ -74,7 +75,7 @@ class TsumiInstance extends EventEmitter {
 			botId: this.botId,
 			sendPayload: this.options.sendPayload,
 		});
-		newNode.startWs();
+		if (!(await newNode.startWs())) throw new Error('Failed to connect to node', newNode);
 		this.emit('nodeAdded', newNode);
 		this.Nodes = { ...this.Nodes, [Object.keys(this.Nodes).length]: newNode };
 		if (Object.keys(this.Nodes).length === 1) this.emit('ready');
