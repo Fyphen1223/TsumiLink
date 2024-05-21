@@ -99,7 +99,12 @@ class TsumiInstance extends EventEmitter {
 	handleRaw = (data) => {
 		switch (data.t) {
 			case 'VOICE_SERVER_UPDATE': {
-				const player = findValue(this.Nodes, data.d.guild_id);
+				let player = null;
+				for (let node in this.Nodes) {
+					if (node.players && node.players[guildId]) {
+						player = node.players[guildId];
+					}
+				}
 				if (!player?.connectionInfo) return;
 				player.connectionInfo.token = data.d.token;
 				player.connectionInfo.endpoint = data.d.endpoint;
@@ -109,7 +114,12 @@ class TsumiInstance extends EventEmitter {
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
-				const player = findValue(this.Nodes, data.d.guild_id);
+				let player = null;
+				for (let node in this.Nodes) {
+					if (node.players && node.players[guildId]) {
+						player = node.players[guildId];
+					}
+				}
 				if (data.d.member.user.id !== player.node.botId) return;
 				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				if (data.d.session_id === player.connectionInfo?.sessionId) return;
@@ -126,12 +136,11 @@ class TsumiInstance extends EventEmitter {
 /**
  * Handle finding values in an object
  * @function
- * @async
  * @param {Object} obj - The object to search
  * @param {string} searchKey - The key to search for
  * @return {Object} - The value of the key
  */
-async function findValue(obj, searchKey) {
+function findValue(obj, searchKey) {
 	for (let key in obj) {
 		if (obj[key].players && obj[key].players[searchKey]) {
 			return obj[key].players[searchKey];
