@@ -149,6 +149,11 @@ class Node extends EventEmitter {
 			throw new Error(
 				'Node is not ready, please wait for it to receive session ID to work properly.'
 			);
+		const player = new Player({
+			guildId: options.guildId,
+			node: this,
+		});
+		this.players = { ...this.players, [options.guildId]: player };
 		await this.sendPayload(options.guildId, {
 			op: 4,
 			d: {
@@ -158,11 +163,6 @@ class Node extends EventEmitter {
 				self_deaf: options.options?.deaf ?? false,
 			},
 		});
-		const player = new Player({
-			guildId: options.guildId,
-			node: this,
-		});
-		this.players = { ...this.players, [options.guildId]: player };
 		return player;
 	};
 

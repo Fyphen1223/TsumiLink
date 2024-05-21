@@ -99,12 +99,7 @@ class TsumiInstance extends EventEmitter {
 	handleRaw = (data) => {
 		switch (data.t) {
 			case 'VOICE_SERVER_UPDATE': {
-				let player = null;
-				for (let node in this.Nodes) {
-					if (node.players && node.players[guildId]) {
-						player = node.players[guildId];
-					}
-				}
+				let player = findValue(this.Nodes, data.d.guild_id);
 				if (!player?.connectionInfo) return;
 				player.connectionInfo.token = data.d.token;
 				player.connectionInfo.endpoint = data.d.endpoint;
@@ -114,12 +109,7 @@ class TsumiInstance extends EventEmitter {
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
-				let player = null;
-				for (let node in this.Nodes) {
-					if (node.players && node.players[guildId]) {
-						player = node.players[guildId];
-					}
-				}
+				let player = findValue(this.Nodes, data.d.guild_id);
 				if (data.d.member.user.id !== player.node.botId) return;
 				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				if (data.d.session_id === player.connectionInfo?.sessionId) return;
