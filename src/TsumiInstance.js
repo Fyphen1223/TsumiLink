@@ -76,8 +76,8 @@ class TsumiInstance extends EventEmitter {
 		});
 		newNode.startWs();
 		this.emit('nodeAdded', newNode);
-		if (Object.keys(this.Nodes).length === 1) this.emit('ready');
 		this.Nodes = { ...this.Nodes, [Object.keys(this.Nodes).length]: newNode };
+		if (Object.keys(this.Nodes).length === 1) this.emit('ready');
 		return newNode;
 	};
 
