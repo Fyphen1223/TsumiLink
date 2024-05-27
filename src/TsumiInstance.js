@@ -100,23 +100,21 @@ class TsumiInstance extends EventEmitter {
 		switch (data.t) {
 			case 'VOICE_SERVER_UPDATE': {
 				let player = findValue(this.Nodes, data.d.guild_id);
-				if (!player?.connectionInfo) return;
+				if (!player?.connectionInfo) break;
+				if (data.d.member.user.id !== player.node.botId) break;
+				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				player.connectionInfo.token = data.d.token;
 				player.connectionInfo.endpoint = data.d.endpoint;
-				if (player.connectionInfo.sessionId && player.connectionInfo.token) {
-					player.connect();
-				}
+				if (player.connectionInfo.token) player.connect();
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
 				let player = findValue(this.Nodes, data.d.guild_id);
-				if (data.d.member.user.id !== player.node.botId) return;
+				if (!player?.connectionInfo) break;
+				if (data.d.member.user.id !== player.node.botId) break;
 				if (data.d.channel_id === null) return (player.connectionInfo = {});
-				if (data.d.session_id === player.connectionInfo?.sessionId) return;
 				player.connectionInfo.sessionId = data.d.session_id;
-				if (player.connectionInfo.sessionId && player.connectionInfo.token) {
-					player.connect();
-				}
+				if (player.connectionInfo.token) player.connect();
 				break;
 			}
 		}
