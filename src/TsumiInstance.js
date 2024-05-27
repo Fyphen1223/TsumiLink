@@ -101,11 +101,9 @@ class TsumiInstance extends EventEmitter {
 			case 'VOICE_SERVER_UPDATE': {
 				let player = findValue(this.Nodes, data.d.guild_id);
 				if (!player?.connectionInfo) break;
-				if (data.d.member.user.id !== player.node.botId) break;
-				if (data.d.channel_id === null) return (player.connectionInfo = {});
 				player.connectionInfo.token = data.d.token;
 				player.connectionInfo.endpoint = data.d.endpoint;
-				if (player.connectionInfo.token) player.connect();
+				if (player.connectionInfo.sessionId) player.connect();
 				break;
 			}
 			case 'VOICE_STATE_UPDATE': {
