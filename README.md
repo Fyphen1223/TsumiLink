@@ -17,7 +17,7 @@ For help, you should go to this [Discord Channel](https://discord.gg/wvKAHxgdVb)
 Here's a copyright for him.
 
 ```
-Copyright (c) <current_year>, RainyXeon
+Copyright (c) <2024>, RainyXeon
 ```
 
 @ThePedroo for creating [NodeLink](https://github.com/PerformanC/NodeLink) and [Fastlink](https://github.com/PerformanC/FastLink) for the ideas.
