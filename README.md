@@ -12,7 +12,7 @@ Document released, check it out with the link in the description. STILL NOT WELL
 
 For help, you should go to this [Discord Channel](https://discord.gg/wvKAHxgdVb) (offical LavaLink guild) and seek help.
 
-# How to install
+# 💪 How to install
 
 ```
 npm install tsumi
@@ -26,11 +26,11 @@ or, if you prefer the latest feature, please directly install it with
 npm install https://github.com/Fyphen1223/TsumiLink
 ```
 
-# Docs
+# 📖 Docs
 
 See [GitHub Webpages](https://fyphen1223.github.io/TsumiLink/) for documentation.
 
-# Example
+# 📕 Example
 
 ```js
 const discord = require('discord.js');
