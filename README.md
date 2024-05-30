@@ -12,6 +12,21 @@ Document released, check it out with the link in the description. STILL NOT WELL
 
 For help, you should go to this [Discord Channel](https://discord.gg/wvKAHxgdVb) (offical LavaLink guild) and seek help.
 
+# 💖 Super Thanks
+@RainyXeon for letting me to borrow idea of drivers.
+Here's a copyright for him.
+
+```
+Copyright (c) <current_year>, RainyXeon
+```
+
+@ThePedroo for creating [NodeLink](https://github.com/PerformanC/NodeLink) and [Fastlink](https://github.com/PerformanC/FastLink) for the ideas.
+
+# ✨ Related project
+[Swallow](https://github.com/Fyphen1223/Swallow) is an ongoing project based on TsumiLink.
+
+You can use it as an example for your bot.
+
 # 💪 How to install
 
 ```
