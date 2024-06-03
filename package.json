@@ -13,15 +13,16 @@
 		"Discord Music",
 		"Discord Music Bot",
 		"NodeLink",
-		"Fyphen"
+		"Fyphen",
+		"TsumiLink"
 	],
 	"author": "Fyphen",
 	"license": "ISC",
 	"dependencies": {
-		"ws": "^8.16.0"
+		"ws": "^8.17.0"
 	},
 	"devDependencies": {
-		"eslint": "^9.0.0",
-		"jsdoc": "^4.0.2"
+		"eslint": "^9.4.0",
+		"jsdoc": "^4.0.3"
 	}
 }
