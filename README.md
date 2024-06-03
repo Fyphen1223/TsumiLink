@@ -10,6 +10,8 @@ Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.
 
 Document released, check it out with the link in the description. STILL NOT WELL-DOCUMENTED, BE CAREFUL WHEN YOU USE THIS CLIENT. YOU MIGHT NEED TO LOOK THE CODE TO REALIZE WHAT THE CODE IS DOING.
 
+This client is compatible with Node.js v18 or higher because of the use of globalThis.fetch().
+
 For help, you should go to this [Discord Channel](https://discord.gg/wvKAHxgdVb) (offical LavaLink guild) and seek help.
 
 # 💖 Super Thanks
