@@ -265,6 +265,7 @@ class Player extends EventEmitter {
 	 */
 	stop = async () => {
 		this.track = null;
+		this.status = 'stopped';
 		return await this.update({
 			track: null,
 		});
