@@ -77,6 +77,13 @@ class Player extends EventEmitter {
 		 * @default {}
 		 */
 		this.filters = {};
+
+		/**
+		 * The status of the player
+		 * @type {string}
+		 * @default 'stopped'
+		 */
+		this.status = 'stopped';
 	}
 
 	/**
@@ -90,19 +97,28 @@ class Player extends EventEmitter {
 				this.emit('trackStart', data.track);
 				this.emit('start', data.track);
 				this.track = data.track;
+				this.status = 'playing';
 				break;
 			case 'TrackEndEvent':
 				this.emit('trackEnd', data.track);
 				this.emit('end', data.track);
+				this.track = null;
+				this.status = 'stopped';
 				break;
 			case 'TrackExceptionEvent':
 				this.emit('trackException', data.track);
+				this.track = null;
+				this.status = 'stopped';
 				break;
 			case 'TrackStuckEvent':
 				this.emit('trackStuck', data.track);
+				this.track = null;
+				this.status = 'stopped';
 				break;
 			case 'WebSocketClosedEvent':
 				this.emit('webSocketClosed', data);
+				this.track = null;
+				this.status = 'stopped';
 				break;
 		}
 	};
