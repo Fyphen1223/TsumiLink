@@ -177,7 +177,7 @@ class Player extends EventEmitter {
 				},
 			}
 		);
-		return await res.json();
+		return res;
 	};
 
 	/**
