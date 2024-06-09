@@ -144,3 +144,6 @@ client.on('ready', async () => {
 });
 client.login('Yout Bot token goes here');
 ```
+
+# Showcase
+[Swallow](https://github.com/Fyphen1223/Swallow) is a discord music bot which uses TsumiLink (made by me)
