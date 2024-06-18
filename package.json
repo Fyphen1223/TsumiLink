@@ -1,0 +1,28 @@
+{
+	"name": "tsumi",
+	"version": "0.0.18",
+	"description": "Fast, easy-to-use, reliable, feature-rich Lava/NodeLink compatible client.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"docs": "./node_modules/.bin/jsdoc ./src/*.js -d ./docs"
+	},
+	"keywords": [
+		"LavaLink",
+		"Discord",
+		"Discord Music",
+		"Discord Music Bot",
+		"NodeLink",
+		"Fyphen",
+		"TsumiLink"
+	],
+	"author": "Fyphen",
+	"license": "ISC",
+	"dependencies": {
+		"ws": "^8.17.1"
+	},
+	"devDependencies": {
+		"eslint": "^9.5.0",
+		"jsdoc": "^4.0.3"
+	}
+}
