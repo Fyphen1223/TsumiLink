@@ -19,10 +19,10 @@
 	"author": "Fyphen",
 	"license": "ISC",
 	"dependencies": {
-		"ws": "^8.17.1"
+		"ws": "^8.18.0"
 	},
 	"devDependencies": {
-		"eslint": "^9.5.0",
+		"eslint": "^9.7.0",
 		"jsdoc": "^4.0.3"
 	}
 }
