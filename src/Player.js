@@ -228,7 +228,16 @@ class Player extends EventEmitter {
 	 * @return {Object} - Request result
 	 */
 	play = async (data) => {
-		return await this.update(data);
+		return await this.update({
+			...data,
+			...{
+				voice: {
+					token: this.connectionInfo.token,
+					endpoint: this.connectionInfo.endpoint,
+					sessionId: this.connectionInfo.sessionId,
+				},
+			},
+		});
 	};
 
 	/**
