@@ -376,6 +376,7 @@ class Player extends EventEmitter {
 		listeningWebSocket.on('message', function (data) {
 			const message = JSON.parse(data);
 			if (message.type === 'startSpeakingEvent') {
+				this.emit('startSpeaking', message.data);
 				listener.emit('startSpeaking', message.data);
 				/*
 				{
@@ -386,6 +387,7 @@ class Player extends EventEmitter {
 				*/
 			}
 			if (message.type == 'endSpeakingEvent') {
+				this.emit('endSpeaking', message.data);
 				listener.emit('endSpeaking', message.data);
 				/*
 				{
