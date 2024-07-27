@@ -233,7 +233,7 @@ class Node extends EventEmitter {
 	 * @return {Object} - Results of TTS
 	 */
 	loadTTS = async (text, voice) => {
-		let url = `${this.fetchUrl}/v4/loadtracks?identifier=flowery:${data}`;
+		let url = `${this.fetchUrl}/v4/loadtracks?identifier=flowery:${text}`;
 		if(voice) url + `&voice=${voice}`;
 		const res = await globalThis.fetch(url, {
 			headers: {
