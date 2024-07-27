@@ -223,6 +223,25 @@ class Node extends EventEmitter {
 		});
 		return await res.json();
 	};
+	
+	/**
+	 * Load TTS
+	 * @function
+	 * @async
+	 * @param {String} text - Text to read
+  	 * @param {String} voice - Voice name
+	 * @return {Object} - Results of TTS
+	 */
+	loadTTS = async (text, voice) => {
+		let url = `${this.fetchUrl}/v4/loadtracks?identifier=flowery:${data}`;
+		if(voice) url + `&voice=${voice}`;
+		const res = await globalThis.fetch(url, {
+			headers: {
+				Authorization: this.pass,
+			},
+		});
+		return await res.json();
+	};
 
 	/**
 	 * Load lyrics
