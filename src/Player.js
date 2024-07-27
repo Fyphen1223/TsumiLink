@@ -373,7 +373,7 @@ class Player extends EventEmitter {
 		listeningWebSocket.on('open', function () {
 			listener.emit('open');
 		});
-		listeningWebSocket.on('message', function (data) {
+		listeningWebSocket.on('message', (data) => {
 			const message = JSON.parse(data);
 			if (message.type === 'startSpeakingEvent') {
 				this.emit('startSpeaking', message.data);
