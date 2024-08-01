@@ -267,7 +267,9 @@ class Player extends EventEmitter {
 		this.track = null;
 		this.status = 'stopped';
 		return await this.update({
-			track: null,
+			track: {
+				encoded: null,
+			}
 		});
 	};
 
