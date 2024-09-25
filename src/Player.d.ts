@@ -57,7 +57,7 @@ export declare class Player extends EventEmitter {
   destroy(): Promise<Response>;
   get(): Promise<{ state: { position: number; ping: number; connected: boolean } }>;
 
-  play(data: { track: string }): Promise<object>;
+  play(data: { track: any }): Promise<object>;
   pause(): Promise<object>;
   resume(): Promise<object>;
   stop(): Promise<object>;
